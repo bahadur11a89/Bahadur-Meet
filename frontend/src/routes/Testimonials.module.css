@@ -1,0 +1,8 @@
+.testimonialCard {
+    height: 100%;
+    border-radius: 16px;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.testimonialCard:hover { transform: translateY(-5px); }

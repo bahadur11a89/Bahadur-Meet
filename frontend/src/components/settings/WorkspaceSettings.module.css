@@ -1,0 +1,5 @@
+.formControlLabel {
+    justify-content: space-between;
+    margin-left: 0 !important;
+    padding: 0.5rem 0;
+}

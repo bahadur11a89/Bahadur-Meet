@@ -1,0 +1,7 @@
+.videoGrid {
+    height: 100%;
+}
+
+.gridItem {
+    min-height: 150px;
+}

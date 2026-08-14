@@ -1,0 +1,9 @@
+.mediaCard {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    border-radius: 12px !important;
+}
+
+.mediaCard:hover {
+    transform: scale(1.05);
+}

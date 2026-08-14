@@ -1,0 +1,32 @@
+.timeline {
+    position: relative;
+}
+
+.timelineItem {
+    display: flex;
+    position: relative;
+    min-height: 50px;
+}
+
+.timelineSeparator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.timelineDot {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.timelineConnector {
+    width: 2px;
+    background-color: #e0e0e0;
+    flex-grow: 1;
+}
+
+.timelineContent {
+    padding: 0 16px;
+    flex-grow: 1;
+}

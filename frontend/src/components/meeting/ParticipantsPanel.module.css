@@ -1,0 +1,15 @@
+.panelContainer {
+    height: 100%;
+    background-color: #2d2d2d;
+}
+
+.panelHeader {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.participantList {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 8px;
+}

@@ -1,0 +1,32 @@
+.plannerGrid {
+    display: grid;
+    grid-template-columns: 60px repeat(5, 1fr);
+    min-width: 600px;
+}
+
+.timeColumn {
+    text-align: right;
+    padding-right: 8px;
+    color: #757575;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.dayHeader {
+    text-align: center;
+    font-weight: bold;
+    padding: 8px 0;
+}
+
+.slot {
+    height: 40px;
+    border: 1px solid #e0e0e0;
+    background-color: #e8f5e9; /* Available */
+    cursor: pointer;
+}
+
+.slot:hover {
+    background-color: #c8e6c9;
+}

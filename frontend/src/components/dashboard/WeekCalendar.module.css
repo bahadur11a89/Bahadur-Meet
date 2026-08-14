@@ -1,0 +1,59 @@
+.weekContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.dayHeader {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.scheduleArea {
+    display: flex;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.timeColumn {
+    width: 60px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding-right: 8px;
+}
+
+.timeLabel {
+    height: 60px; /* Corresponds to 1 hour */
+    text-align: right;
+    color: #757575;
+    position: relative;
+    top: -8px; /* Align with the line */
+}
+
+.daysContainer {
+    flex-grow: 1;
+}
+
+.dayColumn {
+    flex: 1;
+    border-left: 1px solid #e0e0e0;
+    position: relative;
+    background-image: linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+    background-size: 100% 60px; /* 1-hour lines */
+}
+
+.eventBlock {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background-color: #e3f2fd !important;
+    border: 1px solid #90caf9;
+    padding: 4px 8px;
+    border-radius: 4px !important;
+    overflow: hidden;
+    z-index: 1;
+}

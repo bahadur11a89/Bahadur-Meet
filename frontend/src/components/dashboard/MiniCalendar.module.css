@@ -1,0 +1,50 @@
+.calendarContainer {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.calendarGrid {
+    text-align: center;
+}
+
+.dayOfWeek {
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+.dayCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dayButton {
+    width: 36px;
+    height: 36px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.dayButton:hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.today {
+    background-color: #1976d2 !important;
+    color: white !important;
+}
+
+.today span {
+    color: white !important;
+}
+
+.eventItem {
+    display: flex;
+    align-items: center;
+}
+
+.eventColor {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}

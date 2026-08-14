@@ -1,0 +1,4 @@
+.authBannerGradient {
+    /* Add gradient styles for the auth banner */
+    background: linear-gradient(135deg, #0E71EB 0%, #023E8A 100%);
+}

@@ -1,0 +1,52 @@
+.container {
+    padding: 2rem;
+}
+
+.bgCard {
+    position: relative;
+    border-radius: 12px !important;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.selectedCard {
+    border-color: var(--mui-palette-primary-main) !important;
+}
+
+.cardMedia {
+    padding-top: 56.25%; /* 16:9 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blurIcon {
+    font-size: 3rem !important;
+    color: #757575;
+}
+
+.bgImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.selectedChip {
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+}
+
+.addButton {
+    height: 100%;
+    border-radius: 12px !important;
+    display: flex;
+    flex-direction: column;
+    text-transform: none !important;
+    padding: 1rem !important;
+    aspect-ratio: 16/9;
+}

@@ -1,0 +1,28 @@
+.drawerContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.drawerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    height: 64px; /* Same as Toolbar */
+}
+
+.navItem {
+    min-height: 48px;
+    justify-content: initial;
+    padding: 0 1.5rem !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.25rem !important;
+    color: var(--mui-palette-text-secondary) !important;
+}
+
+.navIcon {
+    min-width: 0 !important;
+    margin-right: 1.5rem !important;
+    justify-content: center;
+}

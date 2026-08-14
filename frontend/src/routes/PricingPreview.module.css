@@ -1,0 +1,9 @@
+.pricingCard {
+    border-radius: 16px;
+    transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.pricingCard:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}

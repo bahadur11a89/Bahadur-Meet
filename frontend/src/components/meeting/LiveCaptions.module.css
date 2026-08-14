@@ -1,0 +1,19 @@
+.captionsBar {
+    position: absolute;
+    bottom: 80px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(300px, 60%, 800px);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1200;
+    backdrop-filter: blur(5px);
+}
+
+.captionText {
+    flex-grow: 1;
+}

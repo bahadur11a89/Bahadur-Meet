@@ -1,0 +1,15 @@
+{
+  "name": "bahadur-meet",
+  "version": "1.0.0",
+  "description": "Bahadur Meet Full-Stack Application",
+  "main": "index.js",
+  "scripts": {
+    "backend": "npm --prefix backend start",
+    "frontend": "npm --prefix frontend start",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

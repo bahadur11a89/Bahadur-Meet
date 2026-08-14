@@ -1,0 +1,151 @@
+{
+  "info": {
+    "name": "Zoom Clone — Meeting APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base", "value": "http://localhost:8000/api/v1" },
+    { "key": "token", "value": "<JWT_TOKEN>" },
+    { "key": "meetingId", "value": "" },
+    { "key": "meetingCode", "value": "" },
+    { "key": "inviteToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create Meeting",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/create",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Daily Standup\", \"waitingRoom\": true }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    },
+    {
+      "name": "Create Password-Protected Meeting",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/create",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"title\": \"Private Meeting\", \"password\": \"secret123\" }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    },
+    {
+      "name": "Join Meeting",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/join",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"meetingCode\": \"{{meetingCode}}\" }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    },
+    {
+      "name": "Join Password-Protected Meeting",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/join",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"meetingCode\": \"{{meetingCode}}\", \"password\": \"secret123\" }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    },
+    {
+      "name": "Get Meeting History",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base}}/meetings/history?page=1&limit=10&status=ended&search=standup",
+          "host": ["{{base}}"],
+          "path": ["meetings", "history"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "status", "value": "ended" },
+            { "key": "search", "value": "standup" }
+          ]
+        },
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "Get Meeting By Code",
+      "request": {
+        "method": "GET",
+        "url": "{{base}}/meetings/{{meetingCode}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "End Meeting",
+      "request": {
+        "method": "PUT",
+        "url": "{{base}}/meetings/end/{{meetingId}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "Leave Meeting",
+      "request": {
+        "method": "DELETE",
+        "url": "{{base}}/meetings/leave/{{meetingId}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "Generate Invite Link",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/invite/{{meetingId}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "Join By Invite Token",
+      "request": {
+        "method": "POST",
+        "url": "{{base}}/meetings/invite/join/{{inviteToken}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+      }
+    },
+    {
+      "name": "Update Meeting Password",
+      "request": {
+        "method": "PUT",
+        "url": "{{base}}/meetings/password/{{meetingId}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"password\": \"newpass123\" }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    },
+    {
+      "name": "Remove Meeting Password",
+      "request": {
+        "method": "PUT",
+        "url": "{{base}}/meetings/password/{{meetingId}}",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"password\": null }",
+          "options": { "raw": { "language": "json" } }
+        }
+      }
+    }
+  ]
+}

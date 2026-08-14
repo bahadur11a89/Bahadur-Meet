@@ -1,0 +1,21 @@
+.reactionBar {
+    position: absolute;
+    bottom: 100px; /* Above the toolbar */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(45, 45, 45, 0.9);
+    padding: 8px 16px;
+    border-radius: 30px;
+    display: flex;
+    gap: 8px;
+    z-index: 1201; /* Above drawer backdrop */
+    backdrop-filter: blur(5px);
+}
+
+.reactionButton {
+    transition: transform 0.2s ease-in-out !important;
+}
+
+.reactionButton:hover {
+    transform: scale(1.2);
+}

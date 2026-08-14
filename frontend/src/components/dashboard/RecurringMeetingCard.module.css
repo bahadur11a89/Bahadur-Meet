@@ -1,0 +1,15 @@
+.meetingCard {
+    border-radius: 12px !important;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    height: 100%;
+}
+
+.meetingCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.infoItem {
+    display: flex;
+    align-items: center;
+}

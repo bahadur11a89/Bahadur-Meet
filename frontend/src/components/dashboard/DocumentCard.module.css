@@ -1,0 +1,9 @@
+.docCard {
+    border-radius: 12px !important;
+    transition: box-shadow 0.3s ease;
+}
+
+.docCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}

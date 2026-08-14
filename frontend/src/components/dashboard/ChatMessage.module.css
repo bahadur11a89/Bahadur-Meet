@@ -1,0 +1,25 @@
+.messageContainer {
+    max-width: 70%;
+    align-items: flex-end;
+}
+
+.ownMessage {
+    margin-left: auto;
+    flex-direction: row-reverse !important;
+}
+
+.messageBubble {
+    padding: 10px 16px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+}
+
+.ownMessage .messageBubble {
+    background-color: #1976d2;
+    color: white;
+}
+
+.timestamp {
+    display: block;
+    margin-top: 4px;
+}

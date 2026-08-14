@@ -1,0 +1,23 @@
+.container {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    max-width: 800px;
+    width: 100%;
+    border-radius: 16px !important;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.optionPaper {
+    padding: 1.5rem;
+    border-radius: 12px !important;
+}
+
+.iconWrapper {
+    padding: 0.75rem;
+    border-radius: 50%;
+    display: flex;
+}

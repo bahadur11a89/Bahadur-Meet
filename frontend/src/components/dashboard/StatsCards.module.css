@@ -1,0 +1,9 @@
+.statCard {
+  border-radius: 16px !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease-in-out !important;
+}
+
+.statCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}

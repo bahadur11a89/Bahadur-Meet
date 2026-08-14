@@ -1,0 +1,8 @@
+.workspaceContainer {
+    display: flex;
+    height: 100vh; /* Or calc(100vh - AppBarHeight) if inside a layout */
+}
+
+.mainContent {
+    flex-grow: 1;
+}

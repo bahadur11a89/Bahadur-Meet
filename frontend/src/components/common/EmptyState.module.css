@@ -1,0 +1,15 @@
+.emptyStatePaper {
+    padding: 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-style: dashed;
+    border-radius: 16px;
+    background-color: transparent;
+}
+
+.iconWrapper {
+    opacity: 0.6;
+}

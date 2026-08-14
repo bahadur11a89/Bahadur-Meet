@@ -1,0 +1,14 @@
+.panelContainer {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    overflow: hidden; /* To make sure children with border-radius look good */
+}
+
+.notificationItem {
+    padding: 16px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.notificationItem:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}

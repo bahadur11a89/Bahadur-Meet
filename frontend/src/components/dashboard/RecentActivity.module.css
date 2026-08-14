@@ -1,0 +1,44 @@
+.activityContainer {
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.12);
+    transform: translateX(-50%);
+}
+
+.timelineItem {
+    position: relative;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.timelineItem:last-child {
+    margin-bottom: 0;
+}
+
+.timelineIcon {
+    position: absolute;
+    left: 0;
+    transform: translateX(-50%);
+    z-index: 1;
+    background-color: #fff; /* Match with Paper background */
+}
+
+.timelineContent {
+    padding-left: 30px;
+    width: 100%;
+}

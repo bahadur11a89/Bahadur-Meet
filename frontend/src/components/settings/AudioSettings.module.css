@@ -1,0 +1,19 @@
+.container {
+    padding: 2rem;
+    background-color: #f9fafb;
+}
+
+.card {
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important;
+}
+
+.inputLevel {
+    transition: transform 0.1s ease-out !important;
+}
