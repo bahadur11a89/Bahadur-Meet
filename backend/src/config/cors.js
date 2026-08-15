@@ -2,23 +2,30 @@ import { env } from "./env.js";
 
 const allowedOrigins = [
   env.CLIENT_URL,
+  "https://bahadur-meet.vercel.app",
+
+  // Local development
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:5173",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3001",
   "http://127.0.0.1:5173",
-  "https://bahadur-meet.onrender.com",
 ].filter(Boolean);
 
 export const corsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (mobile/curl) or allowed origins or any dev origin
-    if (!origin || allowedOrigins.includes(origin) || env.NODE_ENV !== "production") {
-      callback(null, true);
-    } else {
-      callback(null, true);
+    // Allow requests without an Origin header
+    // (curl, Postman, server-to-server requests)
+    if (!origin) {
+      return callback(null, true);
     }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked origin: ${origin}`));
   },
 
   credentials: true,
@@ -38,4 +45,6 @@ export const corsOptions = {
     "X-Requested-With",
     "Accept",
   ],
+
+  optionsSuccessStatus: 204,
 };
