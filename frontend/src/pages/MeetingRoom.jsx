@@ -290,50 +290,6 @@ export default function VideoMeetComponent() {
         connectToSocketServer();
     }
 
-
-
-
-
-    let getDisplayMediaSuccess = (stream) => {
-        console.log("HERE")
-        try {
-            window.localStream.getTracks().forEach(track => track.stop())
-        } catch (e) { console.log(e) }
-
-        window.localStream = stream
-        localVideoref.current.srcObject = stream
-
-        for (let id in connectionsRef.current) {
-            if (id === socketIdRef.current) continue
-
-            connectionsRef.current[id].addStream(window.localStream)
-
-            connectionsRef.current[id].createOffer().then((description) => {
-                connectionsRef.current[id].setLocalDescription(description)
-                    .then(() => {
-                        socketRef.current.emit('signal', id, JSON.stringify({ 'sdp': connectionsRef.current[id].localDescription }))
-                    })
-                    .catch(e => console.log(e))
-            })
-        }
-
-        stream.getTracks().forEach(track => track.onended = () => {
-            setScreen(false)
-
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks()
-                tracks.forEach(track => track.stop())
-            } catch (e) { console.log(e) }
-
-            let blackSilence = (...args) => new MediaStream([black(...args), silence()])
-            window.localStream = blackSilence()
-            localVideoref.current.srcObject = window.localStream
-
-            getUserMedia()
-
-        })
-    }
-
     let gotMessageFromServer = (fromId, message) => {
         var signal = JSON.parse(message)
 
