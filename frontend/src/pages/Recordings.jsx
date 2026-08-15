@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -43,7 +43,7 @@ export default function RecordingsPage() {
   const [newUrl, setNewUrl] = useState('');
   const [activePlayUrl, setActivePlayUrl] = useState(null);
 
-  const fetchRecordings = async () => {
+  const fetchRecordings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -56,11 +56,11 @@ export default function RecordingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchRecordings();
-  }, []);
+  }, [fetchRecordings]);
 
   const handleSaveRecording = async () => {
     if (!newTitle.trim() || !newUrl.trim()) return;

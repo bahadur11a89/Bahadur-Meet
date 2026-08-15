@@ -127,36 +127,31 @@ export const SocketProvider = ({ children }) => {
         window.addEventListener('online', handleOnline);
         window.addEventListener('offline', handleOffline);
 
+        let currentSocket = null;
         if (isAuthenticated) {
             const token = localStorage.getItem('token') || localStorage.getItem('authToken');
             if (token) {
-                const newSocket = createSocketConnection(token);
-                setSocket(newSocket);
+                currentSocket = createSocketConnection(token);
+                setSocket(currentSocket);
                 setManagers({
-                    listeners: new ListenerManager(newSocket),
-                    debugger: new SocketDebugger(newSocket),
-                    eventQueue: new EventQueue(newSocket),
-                    // Other managers are instantiated in the next effect
+                    listeners: new ListenerManager(currentSocket),
+                    debugger: new SocketDebugger(currentSocket),
+                    eventQueue: new EventQueue(currentSocket),
                 });
             }
         } else {
-            // If user logs out or session expires, disconnect and clean up.
-            if (socket) {
-                disconnect();
-                setSocket(null);
-                setManagers(null);
-            }
+            setSocket(null);
+            setManagers(null);
         }
 
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('online', handleOnline);
             window.removeEventListener('offline', handleOffline);
-            if (socket) {
-                socket.disconnect();
+            if (currentSocket) {
+                currentSocket.disconnect();
             }
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated]); // This effect only manages the existence of the socket instance.
 
     useEffect(() => {

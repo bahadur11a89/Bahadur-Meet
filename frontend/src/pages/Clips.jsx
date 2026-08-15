@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -37,7 +37,7 @@ export default function ClipsPage() {
   const [description, setDescription] = useState('');
   const [activePlayUrl, setActivePlayUrl] = useState(null);
 
-  const fetchClips = async () => {
+  const fetchClips = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -50,11 +50,11 @@ export default function ClipsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchClips();
-  }, []);
+  }, [fetchClips]);
 
   const handleCreateClip = async () => {
     if (!title.trim() || !url.trim()) return;

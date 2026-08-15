@@ -81,8 +81,7 @@ export default function ChatPage() {
       }
     });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeChat, user]);
+  }, [activeChat, user, emit]);
 
   // Listen for real-time messages with deduplication
   useEffect(() => {

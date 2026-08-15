@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -21,7 +21,6 @@ import {
   Dashboard as DashboardIcon,
   Add,
   Delete,
-  Edit,
 } from '@mui/icons-material';
 import { canvasService } from '../services/canvas.service';
 
@@ -34,7 +33,7 @@ export default function CanvasPage() {
   const [openCreate, setOpenCreate] = useState(false);
   const [title, setTitle] = useState('');
 
-  const fetchCanvasDocs = async () => {
+  const fetchCanvasDocs = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -47,11 +46,11 @@ export default function CanvasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCanvasDocs();
-  }, []);
+  }, [fetchCanvasDocs]);
 
   const handleCreateCanvas = async () => {
     if (!title.trim()) return;

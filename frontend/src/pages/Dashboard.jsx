@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -14,7 +14,6 @@ import {
   Divider,
   Fab,
   CircularProgress,
-  Alert,
 } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AddIcon from '@mui/icons-material/Add';
@@ -38,7 +37,7 @@ function Dashboard() {
 
   const personalMeetingId = user?.personalMeetingId || user?.username || 'N/A';
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -60,11 +59,11 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getHistoryOfUser]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleCopyPmi = () => {
     navigator.clipboard.writeText(personalMeetingId.replace(/\s/g, ''));

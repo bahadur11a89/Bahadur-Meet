@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -45,7 +45,7 @@ export default function MeetingsPage() {
   const [error, setError] = useState(null);
   const [meetings, setMeetings] = useState([]);
 
-  const loadMeetings = async () => {
+  const loadMeetings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -62,12 +62,11 @@ export default function MeetingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery]);
 
   useEffect(() => {
     loadMeetings();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [loadMeetings]);
 
   const handleInstantMeeting = async () => {
     try {

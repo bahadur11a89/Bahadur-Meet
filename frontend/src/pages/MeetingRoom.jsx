@@ -78,6 +78,8 @@ export default function VideoMeetComponent() {
         console.log("HELLO");
         getPermissions();
 
+        const currentConnections = connectionsRef.current;
+
         return () => {
             try {
                 if (window.localStream) {
@@ -86,16 +88,15 @@ export default function VideoMeetComponent() {
                 if (socketRef.current) {
                     socketRef.current.disconnect();
                 }
-                for (let id in connectionsRef.current) {
-                    if (connectionsRef.current[id]) {
-                        connectionsRef.current[id].close();
+                for (let id in currentConnections) {
+                    if (currentConnections[id]) {
+                        currentConnections[id].close();
                     }
                 }
             } catch (e) {
                 console.error('Error cleaning up WebRTC resources:', e);
             }
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     let getDisplayMedia = () => {
@@ -153,11 +154,8 @@ export default function VideoMeetComponent() {
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
             console.log("SET STATE HAS ", video, audio);
-
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [video, audio])
+    }, [video, audio]);
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
@@ -504,8 +502,7 @@ useEffect(() => {
     if (screen !== undefined) {
         getDisplayMedia();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [screen])
+}, [screen]);
 let handleScreen = () => {
     setScreen(!screen);
 }

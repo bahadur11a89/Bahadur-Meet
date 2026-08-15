@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -24,7 +24,7 @@ export default function CalendarPage() {
   const [error, setError] = useState(null);
   const [meetings, setMeetings] = useState([]);
 
-  const loadMeetings = async () => {
+  const loadMeetings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -37,11 +37,11 @@ export default function CalendarPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadMeetings();
-  }, []);
+  }, [loadMeetings]);
 
   const now = new Date();
   const currentMonthName = now.toLocaleString('default', { month: 'long', year: 'numeric' });

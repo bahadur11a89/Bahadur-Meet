@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -41,7 +41,7 @@ export default function NotesPage() {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('General');
 
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -54,11 +54,11 @@ export default function NotesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search]);
 
   useEffect(() => {
     fetchNotes();
-  }, [search]);
+  }, [fetchNotes]);
 
   const handleOpenCreate = () => {
     setEditId(null);
