@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   InputBase,
   Box,
-  alpha,
   Dialog,
   Typography,
   List,

@@ -7,20 +7,14 @@ import {
     Button,
     TextField,
     Stack,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Checkbox,
     FormControlLabel,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useMeetings } from '../../context/MeetingContext';
-import { useToast } from '../common/ToastProvider';
 
 const CreateMeetingDialog = ({ open, onClose }) => {
     const { createNewMeeting, creatingMeeting } = useMeetings();
-    const { showToast } = useToast();
     const [formData, setFormData] = useState({
         title: '',
         description: '',

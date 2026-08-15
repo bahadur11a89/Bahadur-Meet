@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Avatar, Stack, Chip } from '@mui/material';
+import { Box, Typography, Avatar, Chip } from '@mui/material';
 import styles from './ActivityCard.module.css';
 
 const categoryColors = {

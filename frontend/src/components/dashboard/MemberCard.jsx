@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Stack, Avatar, Button, Chip, Box, IconButton, Menu, MenuItem, Badge } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Avatar, Chip, Box, IconButton, Menu, MenuItem, Badge } from '@mui/material';
 import { MoreVert, Person, Edit, Delete } from '@mui/icons-material';
 import styles from './MemberCard.module.css';
 

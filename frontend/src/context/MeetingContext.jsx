@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { createContext, useState, useCallback, useMemo, useContext } from 'react';
 import { meetingService } from '../services/meeting.service';
 import { historyService } from '../services/history.service';
 import useApi from '../hooks/useApi';
@@ -18,7 +18,7 @@ export const MeetingProvider = ({ children }) => {
     const { request: fetchMeetingHistoryApi, loading: loadingHistory, error: errorHistory } = useApi(historyService.getMeetingHistory);
     const { request: createMeetingApi, loading: creatingMeeting, error: createError } = useApi(meetingService.createMeeting);
     const { request: getMeetingDetailsApi, loading: loadingMeetingDetails, error: meetingDetailsError } = useApi(meetingService.getMeetingById);
-    const { request: endMeetingApi, loading: endingMeeting, error: endMeetingError } = useApi(meetingService.deleteMeeting); // Assuming deleteMeeting also "ends" it for history
+    const { request: endMeetingApi, loading: endingMeeting } = useApi(meetingService.deleteMeeting); // Assuming deleteMeeting also "ends" it for history
 
     // --- Actions ---
 

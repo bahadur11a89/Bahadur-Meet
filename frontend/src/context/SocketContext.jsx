@@ -92,7 +92,7 @@ export const SocketProvider = ({ children }) => {
         setMeetingStatus('joining');
         setCurrentMeetingId(meetingId);
         managers.eventQueue.enqueue(SOCKET_EVENTS.MEETING_JOIN, { meetingId });
-    }, [socket, currentMeetingId, meetingStatus]);
+    }, [socket, currentMeetingId, meetingStatus, managers]);
 
     const leaveMeeting = useCallback(() => {
         if (socket && currentMeetingId) {
@@ -248,6 +248,9 @@ export const SocketProvider = ({ children }) => {
 
         managers.listeners.subscribe(SOCKET_EVENTS.CONNECT, onConnect);
         managers.listeners.subscribe(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+        managers.listeners.subscribe(SOCKET_EVENTS.CONNECT_ERROR, onConnectError);
+        managers.listeners.subscribe(SOCKET_EVENTS.RECONNECT_ATTEMPT, onReconnectAttempt);
+        managers.listeners.subscribe(SOCKET_EVENTS.RECONNECT_FAILED, onReconnectFailed);
         managers.listeners.subscribe(SOCKET_EVENTS.MEETING_JOIN_SUCCESS, onJoinSuccess);
         managers.listeners.subscribe(SOCKET_EVENTS.MEETING_JOIN_FAILED, onJoinFailed);
         managers.listeners.subscribe(SOCKET_EVENTS.MEETING_ENDED, onMeetingEnded);

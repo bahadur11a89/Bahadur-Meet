@@ -4,8 +4,6 @@ import {
   Box,
   Typography,
   Grid,
-  Card,
-  CardContent,
   Button,
   Stack,
   Avatar,
@@ -21,7 +19,6 @@ import AddIcon from '@mui/icons-material/Add';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ChatIcon from '@mui/icons-material/Chat';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import HistoryIcon from '@mui/icons-material/History';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useAuth } from '../context/AuthContext';

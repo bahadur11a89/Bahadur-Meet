@@ -1,5 +1,5 @@
 // src/components/dashboard/Topbar.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import {
   AppBar,
   Toolbar,

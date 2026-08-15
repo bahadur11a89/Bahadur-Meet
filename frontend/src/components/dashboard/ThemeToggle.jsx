@@ -4,7 +4,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import { useThemeManager } from '../../../app/AppThemeProvider';
-import styles from './ThemeToggle.module.css';
 
 const themeOptions = [
     {

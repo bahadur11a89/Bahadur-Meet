@@ -1,5 +1,3 @@
-import { lightPalette } from './colors';
-
 const createShadow = (color) => [
     'none',
     `0px 2px 1px -1px ${color}`,

@@ -11,7 +11,6 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel,
     TextField
 } from '@mui/material';
 import styles from './WorkspaceSettings.module.css';

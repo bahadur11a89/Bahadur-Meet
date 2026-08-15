@@ -11,7 +11,7 @@ import {
     InputLabel,
     Stack
 } from '@mui/material';
-import { Videocam, HighQuality, AspectRatio } from '@mui/icons-material';
+import { Videocam, HighQuality } from '@mui/icons-material';
 import VideoPreview from '../meeting/VideoPreview';
 import styles from './VideoSettings.module.css';
 

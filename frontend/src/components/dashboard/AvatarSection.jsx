@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Stack, Button, Avatar, Box, Grid } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Button, Avatar, Grid } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 

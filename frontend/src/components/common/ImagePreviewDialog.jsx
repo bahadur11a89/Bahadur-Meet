@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, IconButton, AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { Dialog, DialogContent, IconButton, AppBar, Toolbar, Typography, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';

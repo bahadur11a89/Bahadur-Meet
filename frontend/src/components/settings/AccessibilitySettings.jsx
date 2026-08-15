@@ -10,10 +10,9 @@ import {
     Divider,
     Select,
     MenuItem,
-    FormControl,
-    InputLabel
+    FormControl
 } from '@mui/material';
-import { ClosedCaption, Contrast, FontDownload } from '@mui/icons-material';
+import { FontDownload } from '@mui/icons-material';
 import styles from './AccessibilitySettings.module.css';
 
 const accessibilityOptions = [

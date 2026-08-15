@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../common/ToastProvider';
 import useApi from '../../hooks/useApi';
 import { profileService } from '../../services/profile.service';
-import { Box, Card, CardContent, Typography, Grid, TextField, Avatar, Badge, IconButton, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Grid, TextField, Avatar, Badge, IconButton, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { Edit } from '@mui/icons-material';
 

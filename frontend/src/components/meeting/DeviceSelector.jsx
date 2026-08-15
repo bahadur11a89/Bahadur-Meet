@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, InputLabel, Select, MenuItem, Stack, Typography } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Stack } from '@mui/material';
 import { Videocam, Mic } from '@mui/icons-material';
 import { useDevices } from '../../../hooks/useDevices';
 

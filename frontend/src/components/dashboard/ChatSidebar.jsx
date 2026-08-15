@@ -28,4 +28,4 @@ const ChatSidebar = () => {
   );
 };
 
-export Idefault ChatSidebar;
+export default ChatSidebar;

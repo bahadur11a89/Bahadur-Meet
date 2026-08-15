@@ -1,5 +1,5 @@
 import React from 'react';
-import { Popover, Grid, Typography, Box } from '@mui/material';
+import { Popover, Grid, Box } from '@mui/material';
 
 const emojis = ['😀', '😂', '😍', '👍', '❤️', '🙏', '🎉', '🔥', '👏', '🤔', '👀', '💯'];
 

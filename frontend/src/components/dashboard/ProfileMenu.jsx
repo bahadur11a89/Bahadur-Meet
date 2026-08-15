@@ -9,7 +9,6 @@ import {
   Divider,
   Badge,
   ListItemIcon,
-  ListItemText,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';

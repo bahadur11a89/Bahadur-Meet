@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const useWebRTC = (roomId) => {
-  const [peers, setPeers] = useState([]);
+  const [peers] = useState([]);
   const localVideoRef = useRef();
 
   useEffect(() => {

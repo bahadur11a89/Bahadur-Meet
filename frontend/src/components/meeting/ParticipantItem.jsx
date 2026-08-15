@@ -3,7 +3,6 @@ import { Box, Typography, Avatar, Stack, IconButton, Tooltip, Chip } from '@mui/
 import MicOffIcon from '@mui/icons-material/MicOff';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import styles from './ParticipantItem.module.css';
 

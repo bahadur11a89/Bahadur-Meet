@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Stack, IconButton, Tooltip, Chip, Avatar } from '@mui/material';
+import { Card, CardContent, Typography, Stack, IconButton, Tooltip, Chip, Avatar } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FolderZipIcon from '@mui/icons-material/FolderZip';

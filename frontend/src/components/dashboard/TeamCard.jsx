@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Stack, Avatar, Button, Chip, Box, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Avatar, Button, Chip, Box } from '@mui/material';
 import { Engineering, Storefront, Brush, People, Person } from '@mui/icons-material';
 import styles from './TeamCard.module.css';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Chip } from '@mui/material';
-import { Videocam, Mic, CheckCircle, Error } from '@mui/icons-material';
+import { CheckCircle, Error } from '@mui/icons-material';
 import { useMediaControls } from '../../../hooks/useMediaControls';
 
 const MediaStatusIndicator = () => {

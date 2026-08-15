@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Stack, Avatar } from '@mui/material';
+import { Box, Typography, Avatar } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';

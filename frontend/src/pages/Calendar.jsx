@@ -4,7 +4,6 @@ import {
   Typography,
   Grid,
   Card,
-  CardContent,
   Button,
   Stack,
   ToggleButton,
@@ -12,7 +11,7 @@ import {
   Chip,
   Divider,
 } from '@mui/material';
-import { CalendarMonth, Add, EventNote } from '@mui/icons-material';
+import { Add, EventNote } from '@mui/icons-material';
 
 export default function CalendarPage() {
   const [viewMode, setViewMode] = useState('month');

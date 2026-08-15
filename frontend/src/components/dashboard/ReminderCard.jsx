@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Stack, Chip, Button, Box } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Chip, Button } from '@mui/material';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import styles from './ReminderCard.module.css';
 

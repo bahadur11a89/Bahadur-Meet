@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { Box, Stack, Drawer, Tabs, Tab, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Stack, Drawer, Tabs, Tab, useTheme, useMediaQuery, IconButton } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import ChatIcon from '@mui/icons-material/Chat';
 import styles from './MeetingLayout.module.css';
 
-// Assuming these components exist from previous phases
 const MeetingHeader = () => <Box sx={{p: 2, borderBottom: 1, borderColor: 'divider'}}>Meeting Header</Box>;
 const VideoGrid = () => <Box sx={{flexGrow: 1, p: 2, display: 'grid', placeContent: 'center'}}>Video Grid</Box>;
-const MeetingToolbar = ({ onToggleParticipants, onToggleChat }) => <Box sx={{p: 2, borderTop: 1, borderColor: 'divider'}}>Meeting Toolbar</Box>;
+const MeetingToolbar = ({ onToggleParticipants, onToggleChat }) => (
+  <Box sx={{p: 2, borderTop: 1, borderColor: 'divider', display: 'flex', gap: 1}}>
+    <IconButton onClick={onToggleParticipants} aria-label="Toggle Participants">
+      <PeopleIcon />
+    </IconButton>
+    <IconButton onClick={onToggleChat} aria-label="Toggle Chat">
+      <ChatIcon />
+    </IconButton>
+  </Box>
+);
 const ParticipantsPanel = () => <Box sx={{p: 2}}>Participants Panel</Box>;
 const MeetingChat = () => <Box sx={{p: 2}}>Meeting Chat</Box>;
-const PollsPanel = () => <Box sx={{p: 2}}>Polls Panel</Box>;
-const BreakoutRooms = () => <Box sx={{p: 2}}>Breakout Rooms</Box>;
-const MeetingAssistant = () => <Box sx={{p: 2}}>AI Assistant</Box>;
-const RaiseHandPanel = () => <Box sx={{p: 2}}>Raise Hand Panel</Box>;
-const LiveCaptions = () => <Box sx={{p: 1, textAlign: 'center'}}>Live Captions...</Box>;
-const ReactionBar = () => <Box sx={{position: 'absolute', bottom: '80px', left: '20px'}}>Reactions</Box>;
 
 const panelWidth = 340;
 

@@ -20,17 +20,14 @@ export const MediaProvider = ({ children }) => {
         try {
             const devices = await getAvailableDevices();
             setAvailableDevices(devices);
-            // Set default devices if not already set
-            if (!selectedDevices.video && devices.videoInputs.length > 0) {
-                setSelectedDevices(prev => ({ ...prev, video: devices.videoInputs[0].deviceId }));
-            }
-            if (!selectedDevices.audio && devices.audioInputs.length > 0) {
-                setSelectedDevices(prev => ({ ...prev, audio: devices.audioInputs[0].deviceId }));
-            }
+            setSelectedDevices(prev => ({
+                video: prev.video || (devices.videoInputs.length > 0 ? devices.videoInputs[0].deviceId : undefined),
+                audio: prev.audio || (devices.audioInputs.length > 0 ? devices.audioInputs[0].deviceId : undefined),
+            }));
         } catch (error) {
             console.error('[Media] Failed to enumerate devices:', error);
         }
-    }, [selectedDevices.video, selectedDevices.audio]);
+    }, []);
 
     useEffect(() => {
         refreshDevices();

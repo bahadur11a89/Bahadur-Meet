@@ -17,7 +17,7 @@ import {
     Menu as MenuIcon,
     Search as SearchIcon,
     Notifications as NotificationsIcon,
-    HelpOutline as HelpIcon,
+    HelpOutline as HelpOutlineIcon,
     AccountCircle,
     Settings,
     Business,
@@ -85,7 +85,7 @@ const TopNavbar = ({ onDrawerToggle, sidebarWidth, isSidebarOpen }) => {
                 </IconButton>
 
                 <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                    {AppConfig.appName}
+                    Bahadur Meet
                 </Typography>
 
                 <Box className={styles.search}>
