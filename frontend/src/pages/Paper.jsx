@@ -21,7 +21,6 @@ import {
   Description as DescriptionIcon,
   Add,
   Delete,
-  Save,
 } from '@mui/icons-material';
 import { paperService } from '../services/paper.service';
 
@@ -46,17 +45,20 @@ export default function PaperPage() {
       const res = await paperService.getPaperDocs();
       const list = res.data?.paperDocs || res.data?.data || res.paperDocs || [];
       setDocs(Array.isArray(list) ? list : []);
-      if (list.length > 0 && !activeDoc) {
-        setActiveDoc(list[0]);
-        setContent(list[0].content || '');
-      }
+      setActiveDoc((prevActive) => {
+        if (list.length > 0 && !prevActive) {
+          setContent(list[0].content || '');
+          return list[0];
+        }
+        return prevActive;
+      });
     } catch (err) {
       console.error('Failed to load paper documents:', err);
       setError('Failed to load paper documents.');
     } finally {
       setLoading(false);
     }
-  }, [activeDoc]);
+  }, []);
 
   useEffect(() => {
     fetchPaperDocs();

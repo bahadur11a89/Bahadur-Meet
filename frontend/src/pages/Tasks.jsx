@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -46,7 +46,7 @@ export default function TasksPage() {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('medium');
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -62,11 +62,11 @@ export default function TasksPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, statusFilter]);
 
   useEffect(() => {
     fetchTasks();
-  }, [search, statusFilter]);
+  }, [fetchTasks]);
 
   const handleCreateTask = async () => {
     if (!title.trim()) return;

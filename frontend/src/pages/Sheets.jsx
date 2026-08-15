@@ -55,17 +55,20 @@ export default function SheetsPage() {
       const res = await sheetService.getSheetDocs();
       const list = res.data?.sheetDocs || res.data?.data || res.sheetDocs || [];
       setDocs(Array.isArray(list) ? list : []);
-      if (list.length > 0 && !activeSheet) {
-        setActiveSheet(list[0]);
-        setGrid(Array.isArray(list[0].gridData) && list[0].gridData.length > 0 ? list[0].gridData : INITIAL_GRID);
-      }
+      setActiveSheet((prevActive) => {
+        if (list.length > 0 && !prevActive) {
+          setGrid(Array.isArray(list[0].gridData) && list[0].gridData.length > 0 ? list[0].gridData : INITIAL_GRID);
+          return list[0];
+        }
+        return prevActive;
+      });
     } catch (err) {
       console.error('Failed to load sheet documents:', err);
       setError('Failed to load spreadsheet documents.');
     } finally {
       setLoading(false);
     }
-  }, [activeSheet]);
+  }, []);
 
   useEffect(() => {
     fetchSheetDocs();

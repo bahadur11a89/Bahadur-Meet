@@ -43,17 +43,20 @@ export default function SlidesPage() {
       const res = await slideService.getSlideDecks();
       const list = res.data?.slideDecks || res.data?.data || res.slideDecks || [];
       setDecks(Array.isArray(list) ? list : []);
-      if (list.length > 0 && !activeDeck) {
-        setActiveDeck(list[0]);
-        setSlides(Array.isArray(list[0].slides) ? list[0].slides : [{ title: 'Welcome Slide', content: 'Slide content' }]);
-      }
+      setActiveDeck((prevActive) => {
+        if (list.length > 0 && !prevActive) {
+          setSlides(Array.isArray(list[0].slides) ? list[0].slides : [{ title: 'Welcome Slide', content: 'Slide content' }]);
+          return list[0];
+        }
+        return prevActive;
+      });
     } catch (err) {
       console.error('Failed to load slide decks:', err);
       setError('Failed to load presentation slides.');
     } finally {
       setLoading(false);
     }
-  }, [activeDeck]);
+  }, []);
 
   useEffect(() => {
     fetchSlideDecks();

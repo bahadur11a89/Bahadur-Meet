@@ -47,16 +47,19 @@ export default function WhiteboardsPage() {
       const res = await whiteboardService.getWhiteboards();
       const list = res.data?.whiteboards || res.data?.data || res.whiteboards || [];
       setWhiteboards(Array.isArray(list) ? list : []);
-      if (list.length > 0 && !activeBoard) {
-        setActiveBoard(list[0]);
-      }
+      setActiveBoard((prevActive) => {
+        if (list.length > 0 && !prevActive) {
+          return list[0];
+        }
+        return prevActive;
+      });
     } catch (err) {
       console.error('Failed to load whiteboards:', err);
       setError('Failed to load whiteboards.');
     } finally {
       setLoading(false);
     }
-  }, [activeBoard]);
+  }, []);
 
   useEffect(() => {
     fetchWhiteboards();
