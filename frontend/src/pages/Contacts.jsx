@@ -29,6 +29,7 @@ import {
   Circle,
 } from '@mui/icons-material';
 import { userService } from '../services/user.service';
+import { meetingService } from '../services/meeting.service';
 
 export default function ContactsPage() {
   const navigate = useNavigate();
