@@ -14,6 +14,7 @@ import {
   Divider,
   Fab,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AddIcon from '@mui/icons-material/Add';
@@ -92,6 +93,11 @@ function Dashboard() {
 
   return (
     <Box sx={{ position: 'relative', pb: 8 }}>
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
       <Grid container spacing={3}>
         {/* Left / Main Column */}
         <Grid item xs={12} lg={8}>
