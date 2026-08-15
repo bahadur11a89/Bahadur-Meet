@@ -59,7 +59,7 @@ const LandingNavbar = () => {
             <ListItemText primary={item.text} />
           </ListItemButton>
         ))}
-        <ListItemButton component={Link} to="/meetings">
+        <ListItemButton component={Link} to="/meet">
           <ListItemText primary="Meet" />
         </ListItemButton>
         <ListItemButton component={Link} to="/support">
@@ -143,7 +143,7 @@ const LandingNavbar = () => {
               </IconButton>
 
               {/* Meet */}
-              <Button component={Link} to="/meetings" sx={{ color: theme.palette.text.primary, fontWeight: 600, fontSize: '0.875rem', textTransform: 'none' }}>
+              <Button component={Link} to="/meet" sx={{ color: theme.palette.text.primary, fontWeight: 600, fontSize: '0.875rem', textTransform: 'none' }}>
                 Meet
               </Button>
 

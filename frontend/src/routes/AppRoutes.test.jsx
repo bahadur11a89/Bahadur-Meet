@@ -30,6 +30,11 @@ jest.mock('../pages/PublicAiPage', () => {
   return { __esModule: true, default: () => React.createElement('div', null, 'Public AI Page') };
 });
 
+jest.mock('../pages/PublicMeetPage', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'Public Meet Page') };
+});
+
 jest.mock('../pages/Dashboard', () => {
   const React = require('react');
   return { __esModule: true, default: () => React.createElement('div', null, 'Dashboard Page') };
@@ -56,6 +61,16 @@ describe('AppRoutes public and protected access', () => {
     expect(screen.getByText('Public AI Page')).toBeInTheDocument();
   });
 
+  test('renders the public Meet page on /meet', () => {
+    render(
+      <MemoryRouter initialEntries={['/meet']}>
+        <AppRoutes />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Public Meet Page')).toBeInTheDocument();
+  });
+
   test('renders the AI assistant workspace on /ai-assistant when authenticated', () => {
     render(
       <MemoryRouter initialEntries={['/ai-assistant']}>
@@ -76,4 +91,5 @@ describe('AppRoutes public and protected access', () => {
     expect(screen.getByText('Dashboard Page')).toBeInTheDocument();
   });
 });
+
 

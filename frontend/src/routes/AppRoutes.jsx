@@ -13,6 +13,7 @@ import PricingPage from '../pages/PricingPage';
 import ResourcesPage from '../pages/ResourcesPage';
 import SupportPage from '../pages/SupportPage';
 import PublicAiPage from '../pages/PublicAiPage';
+import PublicMeetPage from '../pages/PublicMeetPage';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import OtpVerification from '../pages/OtpVerification';
@@ -47,6 +48,7 @@ const AppRoutes = () => {
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/support" element={<SupportPage />} />
       <Route path="/ai" element={<PublicAiPage />} />
+      <Route path="/meet" element={<PublicMeetPage />} />
       <Route path="/otp" element={<OtpVerification />} />
       <Route path="/otp-verification" element={<OtpVerification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
