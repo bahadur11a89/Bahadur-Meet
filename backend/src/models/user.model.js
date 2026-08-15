@@ -12,6 +12,7 @@ const userSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['USER', 'ADMIN'], default: 'USER' },
+    personalMeetingId: { type: String, unique: true, sparse: true },
     token: { type: String },
     avatar: { type: String },
     presence: presenceSchema,

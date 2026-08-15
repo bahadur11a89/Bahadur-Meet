@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -14,46 +14,128 @@ import {
   Divider,
   Stack,
   Badge,
+  Chip,
 } from '@mui/material';
 import { Send, AttachFile, EmojiEmotions, Circle } from '@mui/icons-material';
-import io from 'socket.io-client';
-import server from '../environment';
+import { useSocket } from '../context/SocketContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function ChatPage() {
+  const { emit, subscribe, socket } = useSocket();
+  const { user } = useAuth();
+  const messagesEndRef = useRef(null);
+
   const [conversations] = useState([
-    { id: 'c1', name: 'Alex Johnson', lastMsg: 'Sounds good! See you in the meeting.', time: '10:45 AM', online: true, unread: 2 },
-    { id: 'c2', name: 'Sprint Channel', lastMsg: 'Sarah pushed the latest API updates.', time: 'Yesterday', online: false, unread: 0 },
-    { id: 'c3', name: 'David Miller', lastMsg: 'Did you review the PR?', time: 'Aug 5', online: true, unread: 0 },
+    { id: '650000000000000000000001', name: 'General Team Channel', lastMsg: 'No messages yet', time: 'Now', online: true, unread: 0 },
+    { id: '650000000000000000000002', name: 'Architecture & Design', lastMsg: 'No messages yet', time: 'Now', online: true, unread: 0 },
   ]);
 
   const [activeChat, setActiveChat] = useState(conversations[0]);
-  const [messages, setMessages] = useState([
-    { sender: 'Alex Johnson', text: 'Hey there! Are we still on for 2:00 PM?', time: '10:40 AM' },
-    { sender: 'You', text: 'Yes! The agenda and slides are ready.', time: '10:42 AM' },
-    { sender: 'Alex Johnson', text: 'Sounds good! See you in the meeting.', time: '10:45 AM' },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
+  const [isConnected, setIsConnected] = useState(socket ? socket.connected : false);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
-    const socket = io(server, { auth: { token } });
-    socket.on('chat_message', (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    scrollToBottom();
+  }, [messages]);
+
+  // Monitor Socket connection status
+  useEffect(() => {
+    if (!socket) return;
+    setIsConnected(socket.connected);
+
+    const onConnect = () => setIsConnected(true);
+    const onDisconnect = () => setIsConnected(false);
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, [socket]);
+
+  // Join Room & Load History when Active Chat Changes
+  useEffect(() => {
+    if (!activeChat?.id) return;
+    setMessages([]);
+
+    // Join channel room
+    emit('join-call', activeChat.id);
+
+    // Request chat history if backend supports ack/event
+    emit('chat:get-history', { meetingId: activeChat.id }, (response) => {
+      if (response && Array.isArray(response.data)) {
+        const historyMsgs = response.data.map((msg) => ({
+          id: msg._id || msg.id || `${msg.createdAt}-${Math.random()}`,
+          sender: (msg.senderId === (user?.id || user?._id)) ? 'You' : (msg.senderName || 'Participant'),
+          text: msg.content || msg.text || '',
+          time: msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '',
+        }));
+        setMessages(historyMsgs);
+      }
     });
-    return () => socket.disconnect();
-  }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChat, user]);
+
+  // Listen for real-time messages with deduplication
+  useEffect(() => {
+    const unsubscribe = subscribe('chat:new-message', (data) => {
+      if (data && data.content) {
+        const currentUserId = user?.id || user?._id;
+        const isMe = data.senderId === currentUserId;
+        const msgId = data._id || data.id || data.messageId || `${Date.now()}-${Math.random()}`;
+
+        const newMsg = {
+          id: msgId,
+          sender: isMe ? 'You' : (data.senderName || 'Participant'),
+          text: data.content,
+          time: data.createdAt ? new Date(data.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        };
+
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msgId)) {
+            return prev;
+          }
+          return [...prev, newMsg];
+        });
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [subscribe, user]);
 
   const handleSend = () => {
-    if (inputText.trim()) {
-      const newMsg = { sender: 'You', text: inputText.trim(), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-      setMessages((prev) => [...prev, newMsg]);
+    if (inputText.trim() && activeChat?.id) {
+      const text = inputText.trim();
       setInputText('');
+      emit('chat:send-message', {
+        meetingId: activeChat.id,
+        content: text,
+      });
     }
   };
 
   return (
     <Box sx={{ p: 4, height: 'calc(100vh - 100px)' }}>
-      <Typography variant="h4" fontWeight="bold" mb={3}>Team Chat</Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4" fontWeight="bold">Team Chat</Typography>
+        <Chip
+          label={isConnected ? 'Socket Connected' : 'Socket Disconnected'}
+          color={isConnected ? 'success' : 'error'}
+          size="small"
+          variant="outlined"
+        />
+      </Stack>
+
       <Paper variant="outlined" sx={{ height: 'calc(100% - 60px)', borderRadius: 3, display: 'flex', overflow: 'hidden' }}>
         <Grid container sx={{ height: '100%' }}>
           {/* Conversation List */}
@@ -100,8 +182,8 @@ export default function ChatPage() {
                 <Box>
                   <Typography variant="subtitle1" fontWeight="bold">{activeChat.name}</Typography>
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <Circle sx={{ fontSize: 10, color: activeChat.online ? 'success.main' : 'text.disabled' }} />
-                    <Typography variant="caption" color="text.secondary">{activeChat.online ? 'Online' : 'Offline'}</Typography>
+                    <Circle sx={{ fontSize: 10, color: isConnected ? 'success.main' : 'text.disabled' }} />
+                    <Typography variant="caption" color="text.secondary">{isConnected ? 'Online' : 'Offline'}</Typography>
                   </Stack>
                 </Box>
               </Stack>
@@ -109,33 +191,45 @@ export default function ChatPage() {
 
             {/* Messages Area */}
             <Box p={3} sx={{ flexGrow: 1, overflowY: 'auto', bgcolor: 'grey.50' }}>
-              <Stack spacing={2}>
-                {messages.map((m, idx) => (
-                  <Box
-                    key={idx}
-                    sx={{
-                      alignSelf: m.sender === 'You' ? 'flex-end' : 'flex-start',
-                      maxWidth: '70%',
-                    }}
-                  >
-                    <Paper
-                      elevation={0}
+              {messages.length === 0 ? (
+                <Box textAlign="center" py={8}>
+                  <Typography variant="body2" color="text.secondary">
+                    No messages yet in {activeChat.name}. Send a message to start the conversation.
+                  </Typography>
+                </Box>
+              ) : (
+                <Stack spacing={2}>
+                  {messages.map((m, idx) => (
+                    <Box
+                      key={m.id || idx}
                       sx={{
-                        p: 2,
-                        borderRadius: 3,
-                        bgcolor: m.sender === 'You' ? 'primary.main' : 'white',
-                        color: m.sender === 'You' ? 'white' : 'text.primary',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                        alignSelf: m.sender === 'You' ? 'flex-end' : 'flex-start',
+                        maxWidth: '70%',
                       }}
                     >
-                      <Typography variant="body2">{m.text}</Typography>
-                    </Paper>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5, textAlign: m.sender === 'You' ? 'right' : 'left' }}>
-                      {m.time}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          p: 2,
+                          borderRadius: 3,
+                          bgcolor: m.sender === 'You' ? 'primary.main' : 'white',
+                          color: m.sender === 'You' ? 'white' : 'text.primary',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                        }}
+                      >
+                        <Typography variant="caption" display="block" color={m.sender === 'You' ? 'rgba(255,255,255,0.8)' : 'text.secondary'} mb={0.5}>
+                          {m.sender}
+                        </Typography>
+                        <Typography variant="body2">{m.text}</Typography>
+                      </Paper>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5, textAlign: m.sender === 'You' ? 'right' : 'left' }}>
+                        {m.time}
+                      </Typography>
+                    </Box>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </Stack>
+              )}
             </Box>
 
             {/* Input Composer */}
@@ -150,8 +244,11 @@ export default function ChatPage() {
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                  disabled={!isConnected}
                 />
-                <IconButton color="primary" onClick={handleSend} disabled={!inputText.trim()}><Send /></IconButton>
+                <IconButton color="primary" onClick={handleSend} disabled={!inputText.trim() || !isConnected}>
+                  <Send />
+                </IconButton>
               </Stack>
             </Box>
           </Grid>

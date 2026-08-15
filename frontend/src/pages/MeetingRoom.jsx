@@ -18,9 +18,14 @@ const server_url = server;
 
 const peerConfigConnections = {
     "iceServers": [
-        { "urls": "stun:stun.l.google.com:19302" }
+        { "urls": process.env.REACT_APP_STUN_SERVER || "stun:stun.l.google.com:19302" },
+        ...(process.env.REACT_APP_TURN_SERVER ? [{
+            urls: process.env.REACT_APP_TURN_SERVER,
+            username: process.env.REACT_APP_TURN_USERNAME || "",
+            credential: process.env.REACT_APP_TURN_CREDENTIAL || ""
+        }] : [])
     ]
-}
+};
 
 export default function VideoMeetComponent() {
 
@@ -70,8 +75,26 @@ export default function VideoMeetComponent() {
     // }
 
     useEffect(() => {
-        console.log("HELLO")
+        console.log("HELLO");
         getPermissions();
+
+        return () => {
+            try {
+                if (window.localStream) {
+                    window.localStream.getTracks().forEach(track => track.stop());
+                }
+                if (socketRef.current) {
+                    socketRef.current.disconnect();
+                }
+                for (let id in connectionsRef.current) {
+                    if (connectionsRef.current[id]) {
+                        connectionsRef.current[id].close();
+                    }
+                }
+            } catch (e) {
+                console.error('Error cleaning up WebRTC resources:', e);
+            }
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

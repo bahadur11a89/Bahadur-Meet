@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token') || localStorage.getItem('authToken');
     if (token) {
       try {
-        // Retrieve stored user if present
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
@@ -65,6 +64,16 @@ export const AuthProvider = ({ children }) => {
           setUser({ token });
         }
         setIsAuthenticated(true);
+
+        // Fetch fresh profile with PMI and role
+        const profileRes = await axios.get(`${apiBase}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (profileRes.data?.user) {
+          const freshUser = { ...profileRes.data.user, token };
+          setUser(freshUser);
+          localStorage.setItem('user', JSON.stringify(freshUser));
+        }
       } catch (error) {
         console.error('Session validation error:', error);
         localStorage.removeItem('token');
@@ -89,10 +98,22 @@ export const AuthProvider = ({ children }) => {
     const username = credentials.username || credentials.email;
     const password = credentials.password;
     
-    const response = await client.post('/login', { username, password });
+    const response = await axios.post(`${apiBase}/auth/login`, { username, password });
     if (response.status === httpStatus.OK || response.data?.token) {
       const token = response.data.token;
-      const userData = response.data.user || { username, token };
+      let userData = response.data.user || { username, token };
+
+      try {
+        const profileRes = await axios.get(`${apiBase}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (profileRes.data?.user) {
+          userData = { ...profileRes.data.user, token };
+        }
+      } catch (err) {
+        console.warn('Failed to fetch user profile after login:', err);
+      }
+
       localStorage.setItem('token', token);
       localStorage.setItem('authToken', token);
       localStorage.setItem('user', JSON.stringify(userData));
@@ -142,7 +163,14 @@ export const AuthProvider = ({ children }) => {
       const response = await client.get('/get_all_activity', {
         params: { token },
       });
-      return response.data;
+      const data = response.data;
+      if (Array.isArray(data)) {
+        return data;
+      }
+      if (data && Array.isArray(data.data?.meetings)) {
+        return data.data.meetings;
+      }
+      return data?.meetings || data?.data || [];
     } catch (err) {
       throw err;
     }

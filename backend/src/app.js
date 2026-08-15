@@ -13,6 +13,16 @@ import onConnection from "./socket/index.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import meetingRoutes from "./routes/meeting.routes.js";
+import recordingRoutes from "./routes/recording.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import noteRoutes from "./routes/note.routes.js";
+import taskRoutes from "./routes/task.routes.js";
+import whiteboardRoutes from "./routes/whiteboard.routes.js";
+import clipRoutes from "./routes/clip.routes.js";
+import canvasDocRoutes from "./routes/canvasDoc.routes.js";
+import paperDocRoutes from "./routes/paperDoc.routes.js";
+import sheetDocRoutes from "./routes/sheetDoc.routes.js";
+import slideDeckRoutes from "./routes/slideDeck.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 dotenv.config();
@@ -52,6 +62,16 @@ app.get("/health", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/meetings", meetingRoutes);
+app.use("/api/v1/recordings", recordingRoutes);
+app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/notes", noteRoutes);
+app.use("/api/v1/tasks", taskRoutes);
+app.use("/api/v1/whiteboards", whiteboardRoutes);
+app.use("/api/v1/clips", clipRoutes);
+app.use("/api/v1/canvas", canvasDocRoutes);
+app.use("/api/v1/paper", paperDocRoutes);
+app.use("/api/v1/sheets", sheetDocRoutes);
+app.use("/api/v1/slides", slideDeckRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

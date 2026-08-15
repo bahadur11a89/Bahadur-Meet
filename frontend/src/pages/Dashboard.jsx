@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,6 +13,8 @@ import {
   Tooltip,
   Divider,
   Fab,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AddIcon from '@mui/icons-material/Add';
@@ -21,14 +23,48 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ChatIcon from '@mui/icons-material/Chat';
 import HistoryIcon from '@mui/icons-material/History';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useAuth } from '../context/AuthContext';
+import { meetingService } from '../services/meeting.service';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, getHistoryOfUser } = useAuth();
   const [copiedPmi, setCopiedPmi] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [meetings, setMeetings] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
 
-  const personalMeetingId = '816 612 8658';
+  const personalMeetingId = user?.personalMeetingId || user?.username || 'N/A';
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await meetingService.getAllMeetings();
+      const fetchedMeetings = res.data?.meetings || res.data || res.meetings || [];
+      setMeetings(Array.isArray(fetchedMeetings) ? fetchedMeetings : []);
+
+      const actRes = await getHistoryOfUser();
+      const rawAct = Array.isArray(actRes) ? actRes : (actRes?.data?.meetings || actRes?.meetings || []);
+      const formattedAct = rawAct.map((item) => ({
+        text: item.title || `Meeting: ${item.meetingCode}`,
+        time: item.createdAt ? new Date(item.createdAt).toLocaleString() : 'Recent',
+        status: item.status === 'ended' ? 'Completed' : 'Live',
+      }));
+      setRecentActivity(formattedAct);
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err);
+      setError('Failed to load dashboard data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleCopyPmi = () => {
     navigator.clipboard.writeText(personalMeetingId.replace(/\s/g, ''));
@@ -38,16 +74,22 @@ function Dashboard() {
 
   const handleSchedule = () => navigate('/calendar');
   const handleJoin = () => navigate('/meetings');
-  const handleHost = () => {
-    const code = 'host-' + Math.floor(1000 + Math.random() * 9000);
-    navigate(`/meeting/${code}`);
+  const handleHost = async () => {
+    try {
+      const res = await meetingService.createMeeting({ title: 'Instant Host Meeting' });
+      const code = res.data?.data?.meetingCode || res.data?.meetingCode || res.meetingCode;
+      if (code) {
+        navigate(`/meeting/${code}`);
+      } else {
+        const fallbackCode = 'host-' + Math.floor(1000 + Math.random() * 9000);
+        navigate(`/meeting/${fallbackCode}`);
+      }
+    } catch (err) {
+      console.error('Instant meeting error:', err);
+      const fallbackCode = 'host-' + Math.floor(1000 + Math.random() * 9000);
+      navigate(`/meeting/${fallbackCode}`);
+    }
   };
-
-  const recentActivity = [
-    { text: 'Sprint Review & Architecture Sync', time: 'Today, 10:30 AM', status: 'Completed' },
-    { text: 'Bahadur Workplace Pro Trial Activated', time: 'Yesterday, 2:15 PM', status: 'Account Update' },
-    { text: 'Recording Saved: Q3 Roadmap Discussion', time: 'Aug 6, 4:00 PM', status: 'Cloud Backup' },
-  ];
 
   return (
     <Box sx={{ position: 'relative', pb: 8 }}>
@@ -196,32 +238,42 @@ function Dashboard() {
               </Typography>
               <Divider sx={{ mb: 2 }} />
 
-              <Stack spacing={2}>
-                {recentActivity.map((item, idx) => (
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    key={idx}
-                    sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}
-                  >
-                    <Stack direction="row" spacing={1.5} alignItems="center">
-                      <Avatar sx={{ bgcolor: 'rgba(14, 114, 237, 0.1)', color: '#0E72ED', width: 36, height: 36 }}>
-                        <HistoryIcon fontSize="small" />
-                      </Avatar>
-                      <Box>
-                        <Typography variant="subtitle2" fontWeight="700" color="#0f172a">
-                          {item.text}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {item.time}
-                        </Typography>
-                      </Box>
+              {loading ? (
+                <Box textAlign="center" py={3}>
+                  <CircularProgress size={32} />
+                </Box>
+              ) : recentActivity.length === 0 ? (
+                <Typography variant="body2" color="text.secondary" textAlign="center" py={2}>
+                  No recent activity records.
+                </Typography>
+              ) : (
+                <Stack spacing={2}>
+                  {recentActivity.map((item, idx) => (
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      key={idx}
+                      sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}
+                    >
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Avatar sx={{ bgcolor: 'rgba(14, 114, 237, 0.1)', color: '#0E72ED', width: 36, height: 36 }}>
+                          <HistoryIcon fontSize="small" />
+                        </Avatar>
+                        <Box>
+                          <Typography variant="subtitle2" fontWeight="700" color="#0f172a">
+                            {item.text}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {item.time}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                      <Chip label={item.status} size="small" variant="outlined" color="primary" sx={{ fontSize: '0.7rem', fontWeight: 600 }} />
                     </Stack>
-                    <Chip label={item.status} size="small" variant="outlined" color="primary" sx={{ fontSize: '0.7rem', fontWeight: 600 }} />
-                  </Stack>
-                ))}
-              </Stack>
+                  ))}
+                </Stack>
+              )}
             </Paper>
           </Stack>
         </Grid>
@@ -299,21 +351,47 @@ function Dashboard() {
                 </Typography>
               </Stack>
 
-              {/* Status Box */}
-              <Box
-                sx={{
-                  p: 2,
-                  mb: 2.5,
-                  borderRadius: 2,
-                  bgcolor: '#f8fafc',
-                  border: '1px solid #f1f5f9',
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="body2" fontWeight="700" color="#475569">
-                  No Upcoming Meetings
-                </Typography>
-              </Box>
+              {/* Status / Meetings List Box */}
+              {loading ? (
+                <Box textAlign="center" py={2}>
+                  <CircularProgress size={24} />
+                </Box>
+              ) : meetings.filter(m => m.status !== 'ended').length === 0 ? (
+                <Box
+                  sx={{
+                    p: 2,
+                    mb: 2.5,
+                    borderRadius: 2,
+                    bgcolor: '#f8fafc',
+                    border: '1px solid #f1f5f9',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography variant="body2" fontWeight="700" color="#475569">
+                    No Upcoming Meetings
+                  </Typography>
+                </Box>
+              ) : (
+                <Stack spacing={1.5} mb={2.5}>
+                  {meetings.filter(m => m.status !== 'ended').slice(0, 3).map((m) => (
+                    <Box key={m._id || m.meetingCode} sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}>
+                      <Typography variant="subtitle2" fontWeight="700">{m.title || 'Untitled Meeting'}</Typography>
+                      <Typography variant="caption" color="text.secondary" display="block">
+                        Code: {m.meetingCode}
+                      </Typography>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        startIcon={<PlayArrowIcon fontSize="small" />}
+                        onClick={() => navigate(`/meeting/${m.meetingCode}`)}
+                        sx={{ mt: 1, textTransform: 'none', borderRadius: 10, fontSize: '0.75rem' }}
+                      >
+                        Join Now
+                      </Button>
+                    </Box>
+                  ))}
+                </Stack>
+              )}
 
               {/* Test Audio & Video Button */}
               <Button

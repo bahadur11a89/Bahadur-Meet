@@ -19,7 +19,7 @@ export const findMeetingsByUser = async (userId) => {
 export const findMeetingsByUserPaginated = async (userId, { page = 1, limit = 10, search, status }) => {
     const query = { $or: [{ host: userId }, { participants: userId }] };
     if (status) query.status = status;
-    if (search) query.topic = { $regex: search, $options: 'i' };
+    if (search) query.title = { $regex: search, $options: 'i' };
 
     const meetings = await Meeting.find(query)
         .skip((page - 1) * limit)

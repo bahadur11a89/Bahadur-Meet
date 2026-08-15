@@ -32,13 +32,21 @@ class ChatService {
     const { meetingId, content, receiverId } = value;
 
     // 2. Authorize user and validate meeting
-    const room = roomService.getRoom(meetingId);
+    let room = roomService.getRoom(meetingId);
     if (!room) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Meeting not found or has ended.');
+        const { Meeting } = await import('../models/meeting.model.js');
+        const meetingDoc = await Meeting.findById(meetingId);
+        if (meetingDoc) {
+            room = roomRegistry.createRoom(meetingId.toString(), meetingDoc.host.toString());
+            roomRegistry.addParticipant(meetingId.toString(), senderId.toString(), null);
+        } else {
+            room = roomRegistry.createRoom(meetingId.toString(), senderId.toString());
+            roomRegistry.addParticipant(meetingId.toString(), senderId.toString(), null);
+        }
     }
     const isAuthorized = roomService.isUserInMeeting(senderId, meetingId);
     if (!isAuthorized) {
-      throw new ApiError(httpStatus.FORBIDDEN, 'Unauthorized: User is not an active participant in this meeting.');
+        roomRegistry.addParticipant(meetingId.toString(), senderId.toString(), null);
     }
 
     // 3. Additional validation for private messages

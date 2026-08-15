@@ -83,11 +83,52 @@ const meetingSchema = new Schema(
     endedAt: {
       type: Date,
     },
+
+    ai: {
+      status: {
+        type: String,
+        enum: ["NOT_CONFIGURED", "NO_TRANSCRIPT", "PROCESSING", "COMPLETED", "FAILED"],
+        default: "NOT_CONFIGURED",
+      },
+      transcript: [
+        {
+          sender: String,
+          text: String,
+          timestamp: String,
+        },
+      ],
+      summary: {
+        type: String,
+        default: "",
+      },
+      keyDecisions: [
+        {
+          type: String,
+        },
+      ],
+      actionItems: [
+        {
+          text: String,
+          done: { type: Boolean, default: false },
+        },
+      ],
+      generatedAt: {
+        type: Date,
+      },
+      error: {
+        type: String,
+        default: "",
+      },
+    },
   },
   {
     timestamps: true,
   }
 );
+
+meetingSchema.index({ host: 1, createdAt: -1 });
+meetingSchema.index({ participants: 1, createdAt: -1 });
+meetingSchema.index({ status: 1 });
 
 const Meeting = mongoose.model("Meeting", meetingSchema);
 

@@ -34,6 +34,15 @@ import AdminDashboard from '../pages/AdminDashboard';
 import MeetingRoom from '../pages/MeetingRoom';
 import PageNotFound from '../pages/PageNotFound';
 
+import Whiteboards from '../pages/Whiteboards';
+import Notes from '../pages/Notes';
+import Clips from '../pages/Clips';
+import Canvas from '../pages/Canvas';
+import PaperPage from '../pages/Paper';
+import Sheets from '../pages/Sheets';
+import Slides from '../pages/Slides';
+import Tasks from '../pages/Tasks';
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -72,6 +81,16 @@ const AppRoutes = () => {
           <Route path="/settings/*" element={<SettingsPage />} />
           <Route path="/ai-assistant" element={<AiAssistant />} />
           <Route path="/admin/*" element={<AdminDashboard />} />
+
+          {/* Workspace Shell Routes */}
+          <Route path="/whiteboards" element={<Whiteboards />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/clips" element={<Clips />} />
+          <Route path="/canvas" element={<Canvas />} />
+          <Route path="/paper" element={<PaperPage />} />
+          <Route path="/sheets" element={<Sheets />} />
+          <Route path="/slides" element={<Slides />} />
+          <Route path="/tasks" element={<Tasks />} />
         </Route>
       </Route>
 

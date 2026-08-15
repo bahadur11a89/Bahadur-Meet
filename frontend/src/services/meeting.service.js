@@ -10,6 +10,9 @@ const endMeeting = (id) => put(`${API_URL}/end/${id}`);
 const leaveMeeting = (id) => del(`${API_URL}/leave/${id}`);
 const updateMeeting = (id, meetingData) => put(`${API_URL}/${id}`, meetingData);
 
+const getMeetingAi = (id) => get(`${API_URL}/${id}/ai`);
+const generateMeetingAi = (id) => post(`${API_URL}/${id}/ai/generate`);
+
 export const meetingService = {
     getAllMeetings,
     getMeetingById,
@@ -18,4 +21,6 @@ export const meetingService = {
     endMeeting,
     leaveMeeting,
     updateMeeting,
+    getMeetingAi,
+    generateMeetingAi,
 };

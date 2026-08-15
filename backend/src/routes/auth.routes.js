@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { login, register } from "../controllers/user.controller.js";
-import { logout } from "../controllers/auth.controller.js";
+import { logout, changePassword } from "../controllers/auth.controller.js";
 
 import {
     loginValidator,
@@ -9,7 +9,7 @@ import {
 } from "../validators/auth.validator.js";
 
 import authMiddleware from "../middlewares/auth.middleware.js";
-
+import { sensitiveAuthLimiter } from "../middlewares/rateLimiter.middleware.js";
 import { validate } from "../middlewares/validation.middleware.js";
 
 const router = Router();
@@ -17,6 +17,7 @@ const router = Router();
 // Register
 router.post(
     "/register",
+    sensitiveAuthLimiter,
     registerValidator,
     validate,
     register
@@ -25,6 +26,7 @@ router.post(
 // Login
 router.post(
     "/login",
+    sensitiveAuthLimiter,
     loginValidator,
     validate,
     login
@@ -40,8 +42,9 @@ router.post(
 // Change Password
 router.put(
     "/change-password",
+    sensitiveAuthLimiter,
     authMiddleware,
-    logout
+    changePassword
 );
 
 export default router;

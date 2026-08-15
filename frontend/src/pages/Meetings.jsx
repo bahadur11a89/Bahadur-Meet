@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -17,6 +17,8 @@ import {
   TextField,
   Chip,
   IconButton,
+  CircularProgress,
+  Alert,
 } from '@mui/material';
 import {
   VideoCall,
@@ -26,7 +28,9 @@ import {
   ContentCopy,
   Delete,
   Edit,
+  Search,
 } from '@mui/icons-material';
+import { meetingService } from '../services/meeting.service';
 
 export default function MeetingsPage() {
   const navigate = useNavigate();
@@ -34,21 +38,72 @@ export default function MeetingsPage() {
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openJoin, setOpenJoin] = useState(false);
   const [meetingCode, setMeetingCode] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [newMeeting, setNewMeeting] = useState({ title: '', date: '', time: '', duration: '30' });
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [meetings, setMeetings] = useState([]);
 
-  const upcomingMeetings = [
-    { id: 'meet-101', title: 'Sprint Planning & Design Review', time: 'Today, 2:00 PM - 3:00 PM', host: 'You', code: 'meet-101' },
-    { id: 'meet-102', title: 'Client Sync - Enterprise Architecture', time: 'Tomorrow, 10:00 AM - 11:00 AM', host: 'Alex Johnson', code: 'meet-102' },
-  ];
+  const loadMeetings = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = {};
+      if (searchQuery.trim()) {
+        params.search = searchQuery.trim();
+      }
+      const res = await meetingService.getAllMeetings(params);
+      const fetched = res.data?.meetings || res.data || res.meetings || [];
+      setMeetings(Array.isArray(fetched) ? fetched : []);
+    } catch (err) {
+      console.error('Failed to load meetings:', err);
+      setError('Failed to load meetings. Please verify your connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const pastMeetings = [
-    { id: 'meet-099', title: 'Q3 Product Roadmap Sync', time: 'Yesterday, 4:00 PM', duration: '45 mins', code: 'meet-099' },
-    { id: 'meet-098', title: 'Security & Compliance Review', time: 'Aug 5, 2026', duration: '60 mins', code: 'meet-098' },
-  ];
+  useEffect(() => {
+    loadMeetings();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
 
-  const handleInstantMeeting = () => {
-    const randomCode = 'meet-' + Math.floor(1000 + Math.random() * 9000);
-    navigate(`/meeting/${randomCode}`);
+  const handleInstantMeeting = async () => {
+    try {
+      const res = await meetingService.createMeeting({ title: 'Instant Meeting' });
+      const code = res.data?.data?.meetingCode || res.data?.meetingCode || res.meetingCode;
+      if (code) {
+        navigate(`/meeting/${code}`);
+      }
+    } catch (err) {
+      console.error('Failed to create instant meeting:', err);
+      setError('Failed to create instant meeting.');
+    }
+  };
+
+  const handleScheduleSubmit = async () => {
+    if (!newMeeting.title.trim()) {
+      setError('Please provide a meeting title.');
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    try {
+      await meetingService.createMeeting({
+        title: newMeeting.title.trim(),
+        date: newMeeting.date,
+        time: newMeeting.time,
+      });
+      setOpenSchedule(false);
+      setNewMeeting({ title: '', date: '', time: '', duration: '30' });
+      await loadMeetings();
+    } catch (err) {
+      console.error('Failed to schedule meeting:', err);
+      setError('Failed to schedule meeting. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleJoinMeeting = () => {
@@ -56,6 +111,9 @@ export default function MeetingsPage() {
       navigate(`/meeting/${meetingCode.trim()}`);
     }
   };
+
+  const upcomingMeetings = meetings.filter(m => m.status !== 'ended');
+  const pastMeetings = meetings.filter(m => m.status === 'ended');
 
   return (
     <Box sx={{ p: 4 }}>
@@ -78,71 +136,111 @@ export default function MeetingsPage() {
         </Stack>
       </Box>
 
-      {/* Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)}>
-          <Tab label="Upcoming Meetings" />
-          <Tab label="Past Meetings" />
-        </Tabs>
-      </Box>
+      {/* Search & Tabs */}
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', flexGrow: 1 }}>
+          <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)}>
+            <Tab label={`Upcoming Meetings (${upcomingMeetings.length})`} />
+            <Tab label={`Past Meetings (${pastMeetings.length})`} />
+          </Tabs>
+        </Box>
+        <TextField
+          size="small"
+          placeholder="Search meetings by title..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: <Search fontSize="small" sx={{ color: 'text.secondary', mr: 1 }} />,
+          }}
+          sx={{ width: 280, ml: 2 }}
+        />
+      </Stack>
 
-      {/* Tab Panels */}
-      {tabIndex === 0 && (
-        <Grid container spacing={3}>
-          {upcomingMeetings.map((m) => (
-            <Grid item xs={12} md={6} key={m.id}>
-              <Card variant="outlined" sx={{ borderRadius: 3, p: 1 }}>
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                    <Box>
-                      <Typography variant="h6" fontWeight="bold">{m.title}</Typography>
-                      <Typography variant="body2" color="text.secondary">{m.time}</Typography>
-                    </Box>
-                    <Chip label="Upcoming" color="primary" size="small" />
-                  </Stack>
-                  <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-                    Host: {m.host} | Code: <strong>{m.code}</strong>
-                  </Typography>
-                  <Stack direction="row" spacing={1.5}>
-                    <Button variant="contained" startIcon={<PlayArrow />} onClick={() => navigate(`/meeting/${m.code}`)}>
-                      Start Meeting
-                    </Button>
-                    <Button variant="outlined" startIcon={<ContentCopy />} onClick={() => navigator.clipboard.writeText(window.location.origin + '/meeting/' + m.code)}>
-                      Copy Link
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+      {error && <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>{error}</Alert>}
 
-      {tabIndex === 1 && (
-        <Grid container spacing={3}>
-          {pastMeetings.map((m) => (
-            <Grid item xs={12} md={6} key={m.id}>
-              <Card variant="outlined" sx={{ borderRadius: 3, p: 1 }}>
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                    <Box>
-                      <Typography variant="h6" fontWeight="bold">{m.title}</Typography>
-                      <Typography variant="body2" color="text.secondary">{m.time} ({m.duration})</Typography>
-                    </Box>
-                    <Chip label="Ended" color="default" size="small" />
-                  </Stack>
-                  <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-                    Code: <strong>{m.code}</strong>
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <IconButton size="small"><Edit fontSize="small" /></IconButton>
-                    <IconButton size="small" color="error"><Delete fontSize="small" /></IconButton>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+      {loading ? (
+        <Box textAlign="center" py={6}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          {/* Tab Panels */}
+          {tabIndex === 0 && (
+            upcomingMeetings.length === 0 ? (
+              <Box textAlign="center" py={6} sx={{ bgcolor: 'grey.50', borderRadius: 3, border: '1px dashed #cbd5e1' }}>
+                <Typography variant="h6" color="text.secondary" fontWeight="600">No Upcoming Meetings</Typography>
+                <Typography variant="body2" color="text.secondary" mt={0.5}>Click "Schedule Meeting" or "New Instant Meeting" to create one.</Typography>
+              </Box>
+            ) : (
+              <Grid container spacing={3}>
+                {upcomingMeetings.map((m) => (
+                  <Grid item xs={12} md={6} key={m._id || m.meetingCode}>
+                    <Card variant="outlined" sx={{ borderRadius: 3, p: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={2}>
+                          <Box>
+                            <Typography variant="h6" fontWeight="bold">{m.title || 'Untitled Meeting'}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {m.startedAt ? new Date(m.startedAt).toLocaleString() : 'Scheduled'}
+                            </Typography>
+                          </Box>
+                          <Chip label={m.status || 'Upcoming'} color="primary" size="small" />
+                        </Stack>
+                        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+                          Host: {m.host?.name || 'You'} | Code: <strong>{m.meetingCode}</strong>
+                        </Typography>
+                        <Stack direction="row" spacing={1.5}>
+                          <Button variant="contained" startIcon={<PlayArrow />} onClick={() => navigate(`/meeting/${m.meetingCode}`)}>
+                            Start Meeting
+                          </Button>
+                          <Button variant="outlined" startIcon={<ContentCopy />} onClick={() => navigator.clipboard.writeText(window.location.origin + '/meeting/' + m.meetingCode)}>
+                            Copy Link
+                          </Button>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )
+          )}
+
+          {tabIndex === 1 && (
+            pastMeetings.length === 0 ? (
+              <Box textAlign="center" py={6} sx={{ bgcolor: 'grey.50', borderRadius: 3, border: '1px dashed #cbd5e1' }}>
+                <Typography variant="h6" color="text.secondary" fontWeight="600">No Past Meetings</Typography>
+                <Typography variant="body2" color="text.secondary" mt={0.5}>Completed meetings will appear here.</Typography>
+              </Box>
+            ) : (
+              <Grid container spacing={3}>
+                {pastMeetings.map((m) => (
+                  <Grid item xs={12} md={6} key={m._id || m.meetingCode}>
+                    <Card variant="outlined" sx={{ borderRadius: 3, p: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mb={2}>
+                          <Box>
+                            <Typography variant="h6" fontWeight="bold">{m.title || 'Untitled Meeting'}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Ended: {m.endedAt ? new Date(m.endedAt).toLocaleString() : 'N/A'}
+                            </Typography>
+                          </Box>
+                          <Chip label="Ended" color="default" size="small" />
+                        </Stack>
+                        <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+                          Code: <strong>{m.meetingCode}</strong>
+                        </Typography>
+                        <Stack direction="row" spacing={1}>
+                          <IconButton size="small"><Edit fontSize="small" /></IconButton>
+                          <IconButton size="small" color="error"><Delete fontSize="small" /></IconButton>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )
+          )}
+        </>
       )}
 
       {/* Schedule Dialog */}
@@ -156,8 +254,10 @@ export default function MeetingsPage() {
           </Stack>
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
-          <Button onClick={() => setOpenSchedule(false)}>Cancel</Button>
-          <Button variant="contained" onClick={() => setOpenSchedule(false)}>Save & Schedule</Button>
+          <Button onClick={() => setOpenSchedule(false)} disabled={submitting}>Cancel</Button>
+          <Button variant="contained" onClick={handleScheduleSubmit} disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save & Schedule'}
+          </Button>
         </DialogActions>
       </Dialog>
 

@@ -22,6 +22,8 @@ import {
     updatePasswordValidator,
 } from "../validators/meeting.validator.js";
 
+import { getMeetingAiController, generateMeetingAiController, saveTranscriptController } from "../controllers/ai.controller.js";
+
 const router = Router();
 
 // ─── Phase 3.1 ───────────────────────────────────────────────────────────────
@@ -40,7 +42,12 @@ router.post("/invite/join/:token", authMiddleware, joinByInviteController);
 // ─── Phase 3.11 ──────────────────────────────────────────────────────────────
 router.put("/password/:meetingId", authMiddleware, updatePasswordValidator, validate, updatePasswordController);
 
+import { aiGenerationLimiter } from "../middlewares/rateLimiter.middleware.js";
+
 // ─── Parameterized (keep below static routes) ────────────────────────────────
+router.get("/:meetingId/ai", authMiddleware, getMeetingAiController);
+router.post("/:meetingId/ai/generate", authMiddleware, aiGenerationLimiter, generateMeetingAiController);
+router.post("/:meetingId/transcript", authMiddleware, saveTranscriptController);
 router.get("/:meetingCode", authMiddleware, getMeeting);
 router.delete("/leave/:meetingId", authMiddleware, leaveMeetingController);
 

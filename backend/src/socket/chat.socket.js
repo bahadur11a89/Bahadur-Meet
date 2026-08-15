@@ -11,17 +11,24 @@ const wrap = (socket, handler) => async (payload, callback) => {
 
 export default (io, socket) => {
   // Assumes auth middleware has populated socket.user
-  const senderId = socket.user.id;
+  const senderId = socket.user?.id || socket.user?._id;
 
   const sendMessage = async (payload) => {
-    const message = await ChatService.sendMessage({ senderId, payload, isPrivate: false });
+    const sId = socket.user?.id || socket.user?._id;
+    const message = await ChatService.sendMessage({ senderId: sId, payload, isPrivate: false });
     const response = {
       messageId: message._id,
-      senderId: message.sender._id,
+      meetingId: message.meetingId,
+      senderId: message.sender._id || message.sender,
       content: message.content,
       createdAt: message.createdAt,
     };
-    io.to(message.meetingId.toString()).emit('chat:new-message', response);
+    if (message.meetingId) {
+      socket.join(message.meetingId.toString());
+      io.to(message.meetingId.toString()).emit('chat:new-message', response);
+    } else {
+      socket.emit('chat:new-message', response);
+    }
   };
 
   const sendPrivateMessage = async (payload) => {
