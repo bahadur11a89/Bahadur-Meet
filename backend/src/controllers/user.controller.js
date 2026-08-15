@@ -13,7 +13,10 @@ const login = asyncHandler(async (req, res) => {
         throw new Error("Username and password are required");
     }
 
-    const user = await User.findOne({ username });
+    const cleanUsername = username.trim().toLowerCase();
+    const user = await User.findOne({
+        $or: [{ username: cleanUsername }, { username: username.trim() }]
+    });
 
     if (!user) {
         res.status(httpStatus.UNAUTHORIZED);
@@ -58,7 +61,10 @@ const register = asyncHandler(async (req, res) => {
         throw new Error("All fields are required");
     }
 
-    const existingUser = await User.findOne({ username });
+    const cleanUsername = username.trim().toLowerCase();
+    const existingUser = await User.findOne({
+        $or: [{ username: cleanUsername }, { username: username.trim() }]
+    });
     if (existingUser) {
         res.status(httpStatus.CONFLICT);
         throw new Error("User with this username already exists");
