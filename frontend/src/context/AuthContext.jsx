@@ -9,7 +9,7 @@ const defaultAuthValue = {
   userData: null,
   setUserData: () => {},
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
   login: async () => {},
   handleLogin: async () => {},
   register: async () => {},
@@ -69,9 +69,13 @@ export const AuthProvider = ({ children }) => {
         console.error('Session validation error:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
         setUser(null);
         setIsAuthenticated(false);
       }
+    } else {
+      setUser(null);
+      setIsAuthenticated(false);
     }
     setIsLoading(false);
   }, []);

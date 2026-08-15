@@ -23,7 +23,7 @@ import { InputBase, Paper } from '@mui/material';
 
 const navLinks = [
   { text: 'Products', path: '/products', targetId: 'products' },
-  { text: 'AI', path: '/ai-assistant', targetId: 'ai-assistant' },
+  { text: 'AI', path: '/ai', targetId: 'ai-assistant' },
   { text: 'Solutions', path: '/solutions', targetId: 'solutions' },
   { text: 'Pricing', path: '/plans', targetId: 'pricing' },
   { text: 'Resources', path: '/resources', targetId: 'features' },
@@ -59,7 +59,7 @@ const LandingNavbar = () => {
             <ListItemText primary={item.text} />
           </ListItemButton>
         ))}
-        <ListItemButton component={Link} to="/dashboard">
+        <ListItemButton component={Link} to="/meetings">
           <ListItemText primary="Meet" />
         </ListItemButton>
         <ListItemButton component={Link} to="/support">
@@ -143,7 +143,7 @@ const LandingNavbar = () => {
               </IconButton>
 
               {/* Meet */}
-              <Button component={Link} to="/dashboard" sx={{ color: theme.palette.text.primary, fontWeight: 600, fontSize: '0.875rem', textTransform: 'none' }}>
+              <Button component={Link} to="/meetings" sx={{ color: theme.palette.text.primary, fontWeight: 600, fontSize: '0.875rem', textTransform: 'none' }}>
                 Meet
               </Button>
 

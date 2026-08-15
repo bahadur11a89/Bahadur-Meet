@@ -8,7 +8,7 @@ export const parseApiError = (error) => {
         return error.response.data.message;
     }
     if (error?.code === 'ERR_NETWORK' || error?.message === 'Network Error' || !error?.response) {
-        return 'Server to connect error: Backend server (http://localhost:8000) is unreachable. Please ensure the backend is running (run: npm run dev).';
+        return 'Unable to connect to the server. Please check your internet connection or try again later.';
     }
     if (error?.message) {
         return error.message;

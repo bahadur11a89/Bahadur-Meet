@@ -1,12 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 
 jest.mock('../hooks/useAuth', () => ({
   __esModule: true,
-  default: () => ({ isAuthenticated: false, isLoading: false, loading: false }),
-  useAuth: () => ({ isAuthenticated: false, isLoading: false, loading: false }),
+  default: () => ({ isAuthenticated: true, isLoading: false, loading: false }),
+  useAuth: () => ({ isAuthenticated: true, isLoading: false, loading: false }),
 }));
 
 jest.mock('../components/layout/AppLayout', () => {
@@ -15,32 +16,47 @@ jest.mock('../components/layout/AppLayout', () => {
 
   return {
     __esModule: true,
-    default: () => <div data-testid="app-layout"><Outlet /></div>,
+    default: () => React.createElement('div', { 'data-testid': 'app-layout' }, React.createElement(Outlet)),
   };
 });
 
-jest.mock('../pages/Landing', () => ({
-  __esModule: true,
-  default: () => <div>Landing Page</div>,
-}));
+jest.mock('../pages/Landing', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'Landing Page') };
+});
 
-jest.mock('../pages/Dashboard', () => ({
-  __esModule: true,
-  default: () => <div>Dashboard Page</div>,
-}));
+jest.mock('../pages/PublicAiPage', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'Public AI Page') };
+});
 
-jest.mock('../pages/AiAssistant', () => ({
-  __esModule: true,
-  default: () => <div>AI Assistant Page</div>,
-}));
+jest.mock('../pages/Dashboard', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'Dashboard Page') };
+});
 
-jest.mock('../pages/Login', () => ({
-  __esModule: true,
-  default: () => <div>Login Page</div>,
-}));
+jest.mock('../pages/AiAssistant', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'AI Assistant Page') };
+});
 
-describe('AppRoutes public access', () => {
-  test('renders the AI assistant page without redirecting to login', () => {
+jest.mock('../pages/Login', () => {
+  const React = require('react');
+  return { __esModule: true, default: () => React.createElement('div', null, 'Login Page') };
+});
+
+describe('AppRoutes public and protected access', () => {
+  test('renders the public AI page on /ai', () => {
+    render(
+      <MemoryRouter initialEntries={['/ai']}>
+        <AppRoutes />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Public AI Page')).toBeInTheDocument();
+  });
+
+  test('renders the AI assistant workspace on /ai-assistant when authenticated', () => {
     render(
       <MemoryRouter initialEntries={['/ai-assistant']}>
         <AppRoutes />
@@ -50,7 +66,7 @@ describe('AppRoutes public access', () => {
     expect(screen.getByText('AI Assistant Page')).toBeInTheDocument();
   });
 
-  test('renders the dashboard page without redirecting to login', () => {
+  test('renders the dashboard page when authenticated', () => {
     render(
       <MemoryRouter initialEntries={['/dashboard']}>
         <AppRoutes />
@@ -60,3 +76,4 @@ describe('AppRoutes public access', () => {
     expect(screen.getByText('Dashboard Page')).toBeInTheDocument();
   });
 });
+
