@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -39,7 +39,7 @@ export default function PaperPage() {
 
   const saveTimeoutRef = useRef(null);
 
-  const fetchPaperDocs = async () => {
+  const fetchPaperDocs = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -56,11 +56,11 @@ export default function PaperPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeDoc]);
 
   useEffect(() => {
     fetchPaperDocs();
-  }, []);
+  }, [fetchPaperDocs]);
 
   const handleCreatePaper = async () => {
     if (!title.trim()) return;

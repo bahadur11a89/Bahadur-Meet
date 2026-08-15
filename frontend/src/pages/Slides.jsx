@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -36,7 +36,7 @@ export default function SlidesPage() {
   const [openCreate, setOpenCreate] = useState(false);
   const [title, setTitle] = useState('');
 
-  const fetchSlideDecks = async () => {
+  const fetchSlideDecks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -53,11 +53,11 @@ export default function SlidesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeDeck]);
 
   useEffect(() => {
     fetchSlideDecks();
-  }, []);
+  }, [fetchSlideDecks]);
 
   const handleCreateDeck = async () => {
     if (!title.trim()) return;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -40,7 +40,7 @@ export default function WhiteboardsPage() {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  const fetchWhiteboards = async () => {
+  const fetchWhiteboards = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -56,11 +56,11 @@ export default function WhiteboardsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeBoard]);
 
   useEffect(() => {
     fetchWhiteboards();
-  }, []);
+  }, [fetchWhiteboards]);
 
   const handleCreateBoard = async () => {
     if (!title.trim()) return;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -48,7 +48,7 @@ export default function SheetsPage() {
   const [openCreate, setOpenCreate] = useState(false);
   const [title, setTitle] = useState('');
 
-  const fetchSheetDocs = async () => {
+  const fetchSheetDocs = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -65,11 +65,11 @@ export default function SheetsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeSheet]);
 
   useEffect(() => {
     fetchSheetDocs();
-  }, []);
+  }, [fetchSheetDocs]);
 
   const handleCreateSheet = async () => {
     if (!title.trim()) return;
