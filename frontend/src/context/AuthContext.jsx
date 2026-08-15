@@ -24,7 +24,6 @@ export const AuthContext = createContext(defaultAuthValue);
 const apiBase = API_URL || (server.endsWith('/api/v1') ? server : `${server}/api/v1`);
 const client = axios.create({
   baseURL: `${apiBase}/users`,
-  timeout: 15000,
 });
 
 client.interceptors.request.use(
