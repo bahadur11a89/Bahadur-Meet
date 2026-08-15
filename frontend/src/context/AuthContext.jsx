@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import httpStatus from 'http-status';
-import server from '../environment';
+import server, { API_URL } from '../environment';
 
 const defaultAuthValue = {
   user: null,
@@ -21,9 +21,10 @@ const defaultAuthValue = {
 
 export const AuthContext = createContext(defaultAuthValue);
 
-const apiBase = server.endsWith('/api/v1') ? server : `${server}/api/v1`;
+const apiBase = API_URL || (server.endsWith('/api/v1') ? server : `${server}/api/v1`);
 const client = axios.create({
   baseURL: `${apiBase}/users`,
+  timeout: 15000,
 });
 
 client.interceptors.request.use(
@@ -35,6 +36,16 @@ client.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!error.response) {
+      console.error(`[Auth Network Error]: Server at ${client.defaults.baseURL} is unreachable. Please verify the backend is running.`, error);
+    }
+    return Promise.reject(error);
+  }
 );
 
 export const AuthProvider = ({ children }) => {

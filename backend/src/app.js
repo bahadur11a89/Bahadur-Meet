@@ -13,6 +13,7 @@ import onConnection from "./socket/index.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import meetingRoutes from "./routes/meeting.routes.js";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 dotenv.config();
 
@@ -30,7 +31,9 @@ const server = http.createServer(app);
 // --- Socket.IO ---
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
     credentials: true,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,6 +52,9 @@ app.get("/health", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/meetings", meetingRoutes);
+
+// Global Error Handler
+app.use(errorHandler);
 
 console.log("[SOCKET] Socket.IO server initialized");
 
