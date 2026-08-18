@@ -124,7 +124,7 @@ const DashboardLayout = ({ children }) => {
   const supportList = [
     { text: 'Bahadur Learning Center', path: '/support', icon: <SchoolIcon sx={{ fontSize: 18 }} />, external: true },
     { text: 'Video Tutorials', path: '/support', icon: <PlayCircleIcon sx={{ fontSize: 18 }} />, external: true },
-    { text: 'Knowledge Base', path: '/support', icon: <HelpIcon sx={{ fontSize: 18 }} /> },
+    { text: 'Knowledge Base', path: '/support', icon: <HelpIcon sx={{ fontSize: 18 }} />, external: true },
   ];
 
   const sidebarContent = (
@@ -265,6 +265,8 @@ const DashboardLayout = ({ children }) => {
                 key={idx}
                 component={Link}
                 to={item.path}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 sx={{
                   borderRadius: 2,
                   py: 0.6,
@@ -337,10 +339,10 @@ const DashboardLayout = ({ children }) => {
 
             {!isMobile && (
               <Stack direction="row" spacing={1}>
-                <Button component={Link} to="/products" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Products</Button>
-                <Button component={Link} to="/solutions" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Solutions</Button>
-                <Button component={Link} to="/resources" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Resources</Button>
-                <Button component={Link} to="/plans" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Plans & Pricing</Button>
+                <Button component={Link} to="/products" target="_blank" rel="noopener noreferrer" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Products</Button>
+                <Button component={Link} to="/solutions" target="_blank" rel="noopener noreferrer" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Solutions</Button>
+                <Button component={Link} to="/resources" target="_blank" rel="noopener noreferrer" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Resources</Button>
+                <Button component={Link} to="/plans" target="_blank" rel="noopener noreferrer" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Plans & Pricing</Button>
               </Stack>
             )}
           </Stack>

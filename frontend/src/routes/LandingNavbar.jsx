@@ -19,7 +19,8 @@ import {
 import LanguageIcon from '@mui/icons-material/Language';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import { InputBase, Paper } from '@mui/material';
+import { InputBase, Paper, Avatar } from '@mui/material';
+import { useAuth } from '../context/AuthContext';
 
 const navLinks = [
   { text: 'Products', path: '/products', targetId: 'products' },
@@ -35,6 +36,7 @@ const LandingNavbar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { isAuthenticated, user } = useAuth();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -65,12 +67,20 @@ const LandingNavbar = () => {
         <ListItemButton component={Link} to="/support">
           <ListItemText primary="Support" />
         </ListItemButton>
-        <ListItemButton component={Link} to="/login">
-          <ListItemText primary="Sign In" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/register">
-          <ListItemText primary="Sign Up Free" />
-        </ListItemButton>
+        {isAuthenticated ? (
+          <ListItemButton component={Link} to="/dashboard">
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        ) : (
+          <>
+            <ListItemButton component={Link} to="/login">
+              <ListItemText primary="Sign In" />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/register">
+              <ListItemText primary="Sign Up Free" />
+            </ListItemButton>
+          </>
+        )}
       </List>
     </Box>
   );
@@ -157,20 +167,39 @@ const LandingNavbar = () => {
                 Contact Sales
               </Button>
 
-              {/* Sign In */}
-              <Button component={Link} to="/login" sx={{ color: theme.palette.primary.main, fontWeight: 700, fontSize: '0.875rem', textTransform: 'none' }}>
-                Sign In
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button component={Link} to="/dashboard" sx={{ color: theme.palette.primary.main, fontWeight: 700, fontSize: '0.875rem', textTransform: 'none' }}>
+                    Dashboard
+                  </Button>
+                  <IconButton component={Link} to="/dashboard" sx={{ p: 0.5 }}>
+                    <Avatar
+                      src="/logo_b.png"
+                      alt={user?.name || 'User'}
+                      sx={{ width: 32, height: 32, bgcolor: theme.palette.primary.main, fontWeight: 'bold', fontSize: '0.875rem' }}
+                    >
+                      {(user?.name || user?.username || 'U').charAt(0).toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  {/* Sign In */}
+                  <Button component={Link} to="/login" sx={{ color: theme.palette.primary.main, fontWeight: 700, fontSize: '0.875rem', textTransform: 'none' }}>
+                    Sign In
+                  </Button>
 
-              {/* Sign Up Free */}
-              <Button
-                variant="contained"
-                component={Link}
-                to="/register"
-                sx={{ borderRadius: 20, px: 2.5, py: 0.8, fontWeight: 700, fontSize: '0.875rem', textTransform: 'none' }}
-              >
-                Sign Up Free
-              </Button>
+                  {/* Sign Up Free */}
+                  <Button
+                    variant="contained"
+                    component={Link}
+                    to="/register"
+                    sx={{ borderRadius: 20, px: 2.5, py: 0.8, fontWeight: 700, fontSize: '0.875rem', textTransform: 'none' }}
+                  >
+                    Sign Up Free
+                  </Button>
+                </>
+              )}
             </>
           )}
 
