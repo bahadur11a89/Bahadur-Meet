@@ -4,7 +4,7 @@ import { Grid, Box } from '@mui/material';
 
 function AuthLayout({ banner, children }) {
   return (
-    <Grid container component="main" sx={{ minHeight: '100vh' }}>
+    <Grid container component="main" sx={{ minHeight: '100dvh' }}>
       {/* Left Side: AuthBanner */}
       <Grid
         item

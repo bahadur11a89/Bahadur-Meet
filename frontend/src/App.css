@@ -1,6 +1,6 @@
 .landingPageContainer {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100dvh;
   background: url("/public/background.png");
   background-repeat: no-repeat;
   background-size: cover;
@@ -32,8 +32,10 @@
   display: flex;
   justify-content: space-between;
   padding-inline: 3rem;
-  height: 80vh;
+  min-height: calc(100dvh - 80px); /* Account for navbar */
   align-items: center;
+  flex-wrap: wrap; /* allow wrapping on mobile */
+  gap: 2rem;
 }
 
 .landingMainContainer>div:nth-child(1) {
@@ -55,8 +57,9 @@
 }
 
 .landingMainContainer>div:nth-child(2) img {
-  height: 70vh;
-  width: auto;
+  max-height: 70vh;
+  width: 100%;
+  object-fit: contain;
 }
 
 .navBar {
@@ -90,7 +93,8 @@
 }
 
 .rightPanel > img {
-  width: 30vw;
+  width: 100%;
+  max-width: 400px;
   height: auto;
   border-radius: 20px;
 }

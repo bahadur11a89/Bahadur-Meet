@@ -59,7 +59,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ minHeight: '100dvh', bgcolor: 'background.default', display: 'flex', flexDirection: 'column' }}>
       {/* Navbar */}
       <LandingNavbar />
 

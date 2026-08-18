@@ -28,7 +28,7 @@ const VideoGrid = () => {
   const gridSizes = getGridSizes(participantCount);
 
   return (
-    <Grid container spacing={2} className={styles.videoGrid}>
+    <Grid container spacing={2} className={styles.videoGrid} alignContent="center" alignItems="center" justifyContent="center">
       {demoParticipants.map((participant, index) => (
         <Grid item {...gridSizes} key={index} className={styles.gridItem}>
           <VideoTile participant={participant} />

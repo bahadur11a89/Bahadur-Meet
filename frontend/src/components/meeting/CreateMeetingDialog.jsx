@@ -9,11 +9,15 @@ import {
     Stack,
     Checkbox,
     FormControlLabel,
+    useTheme,
+    useMediaQuery,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useMeetings } from '../../context/MeetingContext';
 
 const CreateMeetingDialog = ({ open, onClose }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { createNewMeeting, creatingMeeting } = useMeetings();
     const [formData, setFormData] = useState({
         title: '',
@@ -42,7 +46,7 @@ const CreateMeetingDialog = ({ open, onClose }) => {
     };
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{ sx: { borderRadius: 4 } }}>
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" fullScreen={isMobile} PaperProps={{ sx: { borderRadius: isMobile ? 0 : 4 } }}>
             <DialogTitle sx={{ fontWeight: 'bold' }}>Schedule New Meeting</DialogTitle>
             <DialogContent>
                 <Stack spacing={3} pt={1}>

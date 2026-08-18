@@ -287,7 +287,7 @@ const DashboardLayout = ({ children }) => {
   );
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#f4f5f7' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh', bgcolor: '#f4f5f7' }}>
       {/* Dark Top Utilities Header Bar */}
       <Box sx={{ bgcolor: '#0b1329', color: '#ffffff', py: 0.6, px: { xs: 2, md: 3 } }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -300,7 +300,7 @@ const DashboardLayout = ({ children }) => {
           </Stack>
 
           {/* Right Utilities: Support | Phone | Contact Sales | Request Demo */}
-          <Stack direction="row" spacing={2.5} alignItems="center">
+          <Stack direction="row" spacing={{ xs: 1, sm: 2.5 }} alignItems="center" sx={{ flexWrap: 'wrap' }}>
             <Typography variant="caption" component={Link} to="/support" sx={{ color: '#cbd5e1', textDecoration: 'none', fontWeight: 500, '&:hover': { color: '#ffffff' } }}>
               Support
             </Typography>
@@ -319,8 +319,8 @@ const DashboardLayout = ({ children }) => {
 
       {/* Main Light Navigation App Bar */}
       <AppBar position="sticky" color="default" elevation={0} sx={{ borderBottom: '1px solid #e2e8f0', bgcolor: '#ffffff' }}>
-        <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, md: 3 } }}>
-          <Stack direction="row" spacing={3} alignItems="center">
+        <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 1, md: 3 }, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+          <Stack direction="row" spacing={{ xs: 1, sm: 3 }} alignItems="center">
             {isMobile && (
               <IconButton onClick={handleDrawerToggle} edge="start" sx={{ color: '#334155' }}>
                 <MenuIcon />
@@ -346,11 +346,15 @@ const DashboardLayout = ({ children }) => {
           </Stack>
 
           {/* Right Action Items */}
-          <Stack direction="row" spacing={1.5} alignItems="center">
-            <Button component={Link} to="/calendar" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Schedule</Button>
-            <Button component={Link} to="/dashboard" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Join</Button>
-            <Button endIcon={<KeyboardArrowDownIcon />} onClick={() => navigate('/meeting/instant-' + Math.floor(1000 + Math.random() * 9000))} sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Host</Button>
-            <Button endIcon={<KeyboardArrowDownIcon />} sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Web App</Button>
+          <Stack direction="row" spacing={{ xs: 0.5, sm: 1.5 }} alignItems="center">
+            {!isMobile && (
+              <>
+                <Button component={Link} to="/calendar" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Schedule</Button>
+                <Button component={Link} to="/dashboard" sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Join</Button>
+                <Button endIcon={<KeyboardArrowDownIcon />} onClick={() => navigate('/meeting/instant-' + Math.floor(1000 + Math.random() * 9000))} sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Host</Button>
+                <Button endIcon={<KeyboardArrowDownIcon />} sx={{ color: '#334155', fontWeight: 600, textTransform: 'none' }}>Web App</Button>
+              </>
+            )}
 
             {/* User Profile Avatar Dropdown */}
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0.5, ml: 1 }}>
@@ -410,7 +414,7 @@ const DashboardLayout = ({ children }) => {
                   width: SIDEBAR_WIDTH,
                   boxSizing: 'border-box',
                   position: 'relative',
-                  height: 'calc(100vh - 100px)',
+                  height: 'calc(100dvh - 100px)',
                   borderRight: '1px solid #e2e8f0',
                 },
               }}
@@ -422,7 +426,7 @@ const DashboardLayout = ({ children }) => {
         </Box>
 
         {/* Main Content Area */}
-        <Box component="main" sx={{ flexGrow: 1, minHeight: 'calc(100vh - 100px)', p: { xs: 2, md: 3 } }}>
+        <Box component="main" sx={{ flexGrow: 1, minHeight: 'calc(100dvh - 100px)', p: { xs: 2, md: 3 }, width: { xs: '100%', md: `calc(100% - ${SIDEBAR_WIDTH}px)` } }}>
           {children}
         </Box>
       </Box>

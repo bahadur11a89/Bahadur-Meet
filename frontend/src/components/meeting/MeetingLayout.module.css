@@ -1,5 +1,5 @@
 .meetingLayout {
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background-color: var(--mui-palette-background-default);
     color: var(--mui-palette-text-primary);

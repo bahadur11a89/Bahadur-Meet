@@ -82,7 +82,9 @@ const MeetingToolbar = ({ onToggleParticipants, onToggleChat, onTogglePolls, onT
           ))}
         </Box>
 
-        <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
+        <Box sx={{ display: { xs: 'flex', sm: 'none' }, gap: 1 }}>
+          <ToolbarButton title="Participants" onClick={onToggleParticipants}><PeopleIcon /></ToolbarButton>
+          <ToolbarButton title="Chat" onClick={onToggleChat}><ChatIcon /></ToolbarButton>
           <ToolbarButton title="More"><MoreHorizIcon /></ToolbarButton>
         </Box>
       </Stack>
@@ -92,10 +94,10 @@ const MeetingToolbar = ({ onToggleParticipants, onToggleChat, onTogglePolls, onT
       <Button
         variant="contained"
         color="error"
-        startIcon={<CallEndIcon />}
-        sx={{ borderRadius: '24px', height: '48px', px: 3 }}
+        startIcon={!isMobile && <CallEndIcon />}
+        sx={{ borderRadius: '24px', height: '48px', px: isMobile ? 2 : 3 }}
       >
-        Leave
+        {isMobile ? <CallEndIcon /> : 'Leave'}
       </Button>
     </Box>
   );

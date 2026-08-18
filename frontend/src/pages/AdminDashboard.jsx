@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
           <Typography variant="body2" color="text.secondary">No registered users found.</Typography>
         </Paper>
       ) : (
-        <Paper variant="outlined" sx={{ borderRadius: 3, overflow: 'hidden' }}>
+        <Paper variant="outlined" sx={{ borderRadius: 3, overflowX: 'auto' }}>
           <Table>
             <TableHead sx={{ bgcolor: 'grey.50' }}>
               <TableRow>
