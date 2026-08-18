@@ -8,10 +8,11 @@ const isLocalhost = Boolean(
 
 const defaultHost = isLocalhost ? "http://localhost:8000" : "https://bahadur-meet.onrender.com";
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || defaultHost;
-const API_URL =
-  process.env.REACT_APP_API_URL ||
-  (SOCKET_URL.endsWith('/api/v1') ? SOCKET_URL : `${SOCKET_URL.replace(/\/+$/, '')}/api/v1`);
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || process.env.REACT_APP_API_URL || defaultHost;
+
+// Ensure API_URL always points to the v1 api, regardless of what the env var provides
+const rawApiUrl = process.env.REACT_APP_API_URL || SOCKET_URL;
+const API_URL = rawApiUrl.endsWith('/api/v1') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api/v1`;
 
 export { API_URL, SOCKET_URL };
 
