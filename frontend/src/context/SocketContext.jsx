@@ -91,12 +91,12 @@ export const SocketProvider = ({ children }) => {
         console.log(`[Socket.IO] Joining meeting: ${meetingId}`);
         setMeetingStatus('joining');
         setCurrentMeetingId(meetingId);
-        managers.eventQueue.enqueue(SOCKET_EVENTS.MEETING_JOIN, { meetingId });
+        managers.eventQueue.enqueue(SOCKET_EVENTS.JOIN_CALL, meetingId); // backend expects string
     }, [socket, currentMeetingId, meetingStatus, managers]);
 
     const leaveMeeting = useCallback(() => {
         if (socket && currentMeetingId) {
-            emitSafe(socket, SOCKET_EVENTS.MEETING_LEAVE, { meetingId: currentMeetingId });
+            emitSafe(socket, SOCKET_EVENTS.LEAVE_ROOM, { meetingId: currentMeetingId });
             setCurrentMeetingId(null);
             setMeetingStatus('idle');
             setMeetingState(INITIAL_MEETING_STATE); // Reset meeting state on leave
@@ -193,10 +193,10 @@ export const SocketProvider = ({ children }) => {
             if (currentMeetingId) {
                 console.log(`[Socket.IO] Re-joining meeting ${currentMeetingId} after reconnect.`);
                 // We don't call joinMeeting() directly to avoid state transitions like 'joining'
-                emitSafe(socket, SOCKET_EVENTS.JOIN, { meetingId: currentMeetingId });
+                emitSafe(socket, SOCKET_EVENTS.JOIN_CALL, currentMeetingId); // backend expects string
             }
             // Announce presence to the server
-            socket.emit(PRESENCE_EVENTS.UPDATE_PRESENCE, { state: PRESENCE_STATES.ONLINE });
+            socket.emit(SOCKET_EVENTS.PRESENCE_UPDATE, { state: PRESENCE_STATES.ONLINE });
         };
         const onDisconnect = (reason) => {
             // Only update state if not manually disconnected while going offline
