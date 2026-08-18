@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { 
     Videocam, VideocamOff, Mic, MicOff, ScreenShare, StopScreenShare, 
-    Chat as ChatIcon, CallEnd, Close, People
+    Chat as ChatIcon, CallEnd, Close, People, ContentCopy
 } from '@mui/icons-material';
 import { useSocket } from '../context/SocketContext';
 import { useMedia } from '../context/MediaContext';
@@ -203,9 +203,23 @@ export default function MeetingRoom() {
             
             {/* TOP HEADER */}
             <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'rgba(0,0,0,0.5)', zIndex: 10 }}>
-                <Typography variant="h6" color="white" fontWeight="bold">
-                    {currentMeeting?.title || "Meeting"}
-                </Typography>
+                <Box>
+                    <Typography variant="h6" color="white" fontWeight="bold">
+                        {currentMeeting?.title || "Meeting"}
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" mt={0.5}>
+                        <Typography variant="body2" color="rgba(255,255,255,0.7)">
+                            Meeting Code: {meetingId}
+                        </Typography>
+                        <IconButton 
+                            size="small" 
+                            onClick={() => navigator.clipboard.writeText(meetingId)}
+                            sx={{ color: 'rgba(255,255,255,0.7)', padding: 0.5 }}
+                        >
+                            <ContentCopy fontSize="small" />
+                        </IconButton>
+                    </Stack>
+                </Box>
                 <Stack direction="row" spacing={1} alignItems="center">
                     <People sx={{ color: 'white', fontSize: 20 }} />
                     <Typography color="white" fontWeight="bold">{peers.length + 1}</Typography>

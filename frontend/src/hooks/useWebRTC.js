@@ -41,6 +41,7 @@ const useWebRTC = (meetingId) => {
         }
 
         const pc = new RTCPeerConnection(peerConfig);
+        pc.targetUserId = targetUserId;
         peerConnections.current[targetUserId] = pc;
 
         pc.onicecandidate = (event) => {
@@ -77,6 +78,7 @@ const useWebRTC = (meetingId) => {
 
         const handleRoomJoined = async ({ peers: existingPeers }) => {
             console.log('[WebRTC] Room joined. Existing peers:', existingPeers);
+            setPeers(existingPeers.map(p => ({ userId: p.userId, socketId: p.socketId, stream: null })));
             for (const peer of existingPeers) {
                 const pc = createPeerConnection(peer.userId, peer.socketId);
                 addLocalTracks(pc);
@@ -95,8 +97,10 @@ const useWebRTC = (meetingId) => {
         // We do NOT initiate an offer here to avoid collisions.
         const handlePeerConnected = ({ userId, socketId }) => {
             console.log('[WebRTC] New peer arrived, waiting for offer:', userId);
-            // We can pre-emptively create the connection, or just wait for the offer.
-            // Best to wait for the offer to ensure they are ready.
+            setPeers(prev => {
+                if (prev.find(p => p.userId === userId)) return prev;
+                return [...prev, { userId, socketId, stream: null }];
+            });
         };
 
         const handleOffer = async ({ fromUserId, fromSocketId, offer }) => {
@@ -189,18 +193,15 @@ const useWebRTC = (meetingId) => {
                 try {
                     const offer = await pc.createOffer();
                     await pc.setLocalDescription(offer);
-                    // We need the targetUserId to emit the offer.
-                    // Find it from our peers map.
-                    const targetPeer = peers.find(p => peerConnections.current[p.userId] === pc);
-                    if(targetPeer) {
-                        emit(SOCKET_EVENTS.OFFER, { meetingId, targetUserId: targetPeer.userId, offer });
+                    if(pc.targetUserId) {
+                        emit(SOCKET_EVENTS.OFFER, { meetingId, targetUserId: pc.targetUserId, offer });
                     }
                 } catch(e) {
                     console.error('[WebRTC] Error during stream renegotiation:', e);
                 }
             }
         });
-    }, [localStream, emit, meetingId, peers]);
+    }, [localStream, emit, meetingId]);
 
     return { peers };
 };
